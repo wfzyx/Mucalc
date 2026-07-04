@@ -1,6 +1,6 @@
 :root {
   --bg: #0d0f1a;
-  --card-bg: rgba(255,255,255,0.04);
+  --card-bg: rgba(4,5,18,0.82);
   --card-border: rgba(255,255,255,0.08);
   --text: #d0d4f0;
   --text-muted: #6070a0;
@@ -37,9 +37,9 @@ body {
   align-items: center;
   gap: 10px;
   padding: 10px 16px;
-  background: rgba(0,0,0,0.7);
+  background: rgba(2,3,14,0.92);
   border-bottom: 1px solid var(--card-border);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -78,7 +78,7 @@ body {
   display: flex;
   gap: 2px;
   padding: 8px 12px 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(2,3,14,0.88);
   border-bottom: 1px solid var(--card-border);
   overflow-x: auto;
   flex-wrap: nowrap;
@@ -105,7 +105,8 @@ article.tabs { padding: 0; }
 
 article.tabs section { display: none; }
 article.tabs section:first-child { display: block; }
-article.tabs:has(section:target) section:first-child { display: none; }
+/* Hide non-targeted sections when any section is targeted — :not(:target) never matches the active tab so no specificity conflict */
+article.tabs:has(section:target) section:not(:target) { display: none; }
 article.tabs section:target { display: block; }
 
 /* ── Tab content layout ── */
@@ -126,7 +127,7 @@ article.tabs section:target { display: block; }
   border: 1px solid var(--card-border);
   border-radius: 8px;
   padding: 12px;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(12px);
 }
 
 .card h3 {
