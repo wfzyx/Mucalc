@@ -1,461 +1,361 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="pt-BR">
 <head>
-	<meta charset="utf-8"> 
-	<meta name="viewport" content="width=device-width">
-	<meta name="theme-color" content="#2F3BA2" />
-	<meta name="description" content="A sample mu calc app">
-	<title>	Calc Mu C.A</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#0d0f1a" />
+	<meta name="description" content="MU Online Character Calculator">
+	<title>MU Calc</title>
 	<link rel="manifest" href="manifest.json">
 	<link rel="apple-touch-icon" href="folklore.png">
 	<link rel="stylesheet" href="mucalc.css">
 	<script src="mucalc.js" type="text/javascript"></script>
 </head>
 <body>
-	<!-- COMEÇO DOS MODELOS -->
-	<div style="display:none">
-		<div id="pnlLid">
-			<table>
-				<tr>
-					<td>Liderança</td>
-					<td><input value="32500" min="0" max="32500" id="iCmd" type="number"></td>
-				</tr>
-			</table>
+
+<!-- ── TEMPLATES (hidden) ── -->
+<div style="display:none">
+
+	<!-- Liderança (DL only) -->
+	<div id="pnlLid">
+		<div class="form-row">
+			<label>Liderança</label>
+			<input value="32500" min="0" max="32500" id="iCmd" type="number">
 		</div>
+	</div>
 
-		<div id="pnlArma">
-			<fieldset class="stackfield">
-				<legend>Arma</legend>
-				<table>
-					<tr>
-						<td>
-							Dano Min <input value="0" min="0" id="iSWpmin" type="number">
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Dano Max <input value="0" min="0" id="iSWpmax" type="number">
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label><input id="iSCWp7" type="checkbox"/>Velo+7</label>
-						</td>
-						<td>
-							<label><input id="iSCWp10" type="checkbox"/>10%</label>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label><input id="iSCWp20" type="checkbox"/>lvl/20</label>
-						</td>
-						<td>
-							<label><input id="iSCWp2" type="checkbox"/>2%</label>
-						</td>
-					</tr>
-				</table>
-			</fieldset>
+	<!-- Physical Weapon -->
+	<div id="pnlArma">
+		<div class="sub-group-title">Arma Física</div>
+		<div class="form-row">
+			<label>Dano Mínimo</label>
+			<input value="0" min="0" id="iSWpmin" type="number">
 		</div>
-
-		<div id="pnlCapa">
-			<table>
-				<tr>
-					<td>
-						Capa
-					</td>
-					<td>
-						<select id="iSTAsa">
-							<option value="2">Sim</option>
-							<option value="0">N/A</option>
-						</select><td>+ <input value="0" id="iSLAsa" min="0" max = "13" type="number"></td>
-					</td>
-				</tr>
-				
-
-			</table>
+		<div class="form-row">
+			<label>Dano Máximo</label>
+			<input value="0" min="0" id="iSWpmax" type="number">
 		</div>
-
-		<div id="pnlDanoFB">
-			<fieldset class="stackfield">
-				<legend>Dano Extra Fire Burst</legend>
-				<table>
-					<tr>
-						<td>Minimo</td>
-						<td>Máximo</td>
-						<td>Excelente</td>
-					</tr>
-					<tr>
-						<td><input id="oFBMinphyDmg" type="text" disabled="true" /></td>
-						<td><input id="oFBMaxphyDmg" type="text" disabled="true" /></td>
-						<td><input id="oFBExcphyDmg" type="text" disabled="true" /></td>
-					</tr>
-				</table>
-			</fieldset>
+		<div class="check-row">
+			<label class="check-label"><input id="iSCWp2" type="checkbox"/>+2%</label>
 		</div>
+	</div>
 
-		<div id="pnlDanoCombo">
-			<fieldset class="stackfield">
-				<legend>Combo</legend>
-				<table>
-					<tr>
-						<td>Normal</td>
-						<td><input id="oCBDmg" type="text" disabled="true" /></td>
-					</tr>
-				</table>
-			</fieldset>
+	<!-- Staff (magical weapon) -->
+	<div id="pnlStaff">
+		<div class="sub-group-title">Staff</div>
+		<div class="form-row">
+			<label>Dano Mágico (%)</label>
+			<input value="0" min="0" id="iSStaff" type="number">
 		</div>
-
-		<div id="pnlSelf">
-			<table>
-				<tr>
-					<td>
-						Buff
-						<select id="iSTBuff" style="width:70px">
-							<option value="2">Full</option>
-							<option value="1">Proprio</option>
-							<option value="0" selected="True">N/A</option>
-						</select>
-					</td>
-				</tr>
-			</table>
+		<div class="check-row">
+			<label class="check-label"><input id="iSCStaff2" type="checkbox"/>+2%</label>
 		</div>
+	</div>
 
-		<div id="pnlBuff">
-			<table>
-				<tr>
-					<td>
-						<label><input id="iSCME" type="checkbox"/>Buff Full (32500)</label>
-					</td>
-				</tr>
-			</table>
+	<!-- Wings (Asa) -->
+	<div id="pnlAsa">
+		<div class="form-row">
+			<label>Asa</label>
+			<select id="iSTAsa">
+				<option value="2">Lvl 2</option>
+				<option value="1">Lvl 1</option>
+				<option value="0" selected>N/A</option>
+			</select>
+			<span style="color:var(--text-muted)">+</span>
+			<input value="0" id="iSLAsa" min="0" max="13" type="number" style="width:50px">
 		</div>
+	</div>
 
-		<div id="pnlBuffME">
-			<fieldset class="stackfield">
-				<legend>Buff</legend>
-				<table>
-					<tr>
-						<td>Dano</td>
-						<td>Defesa</td>
-						<td>Cura</td>
-					</tr>
-					<tr>
-						<td><input id="oBuffRed" type="text" disabled="true"></td>
-						<td><input id="oBuffGreen" type="text" disabled="true"></td>
-						<td><input id="oBuffBlue" type="text" disabled="true"></td>
-					</tr>
-				</table>
-			</fieldset>
-		</div>	
-
-		<div id="pnlStaff">
-			<fieldset class="stackfield">
-				<legend>Staff</legend>
-				<table>
-					<tr>
-						<td>Dano Mágico (%)</td>
-						<td><input value="0" min="0" id="iSStaff" type="number"></td>
-					</tr>
-					<tr>
-						<td>
-							<label><input id="iSCWp7" type="checkbox"/>Velo+7</label>
-						</td>
-						<td>
-							<label><input id="iSCWp10" type="checkbox"/>10%</label>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label><input id="iSCWp20" type="checkbox"/>lvl/20</label>
-						</td>
-						<td>
-							<label><input id="iSCWp2" type="checkbox"/>2%</label>
-						</td>
-					</tr>
-				</table>
-			</fieldset>
+	<!-- Cape (DL only) -->
+	<div id="pnlCapa">
+		<div class="form-row">
+			<label>Capa</label>
+			<select id="iSTCapa">
+				<option value="2">Sim</option>
+				<option value="0">N/A</option>
+			</select>
+			<span style="color:var(--text-muted)">+</span>
+			<input value="0" id="iSLCapa" min="0" max="13" type="number" style="width:50px">
 		</div>
+	</div>
 
-		<div id="pnlAsa">
-			<table>
-				<tr>
-					<td>
-						Asa
-					</td>
-					<td>
-						<select id="iSTAsa">
-							<option value="2">Lvl 2</option>
-							<option value="1">Lvl 1</option>
-							<option value="0" selected="True">N/A</option>
-						</select>
-					</td>
-					<td>+ <input value="0" id="iSLAsa" min="0" max = "13" type="number"></td>
-				</tr>
-			</table>
+	<!-- Physical Damage Output -->
+	<div id="pnlDanoPhy">
+		<div class="sub-group-title">Dano Físico</div>
+		<div class="dmg-grid">
+			<div class="dmg-cell"><span>Mínimo</span><input id="oMinphyDmg" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Máximo</span><input id="oMaxphyDmg" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Excelente</span><input id="oExcphyDmg" type="text" disabled /></div>
 		</div>
+	</div>
 
-		<div id="pnlPet">
-			<table>
-				
-			</table>
+	<!-- Fire Burst Damage (DL) -->
+	<div id="pnlDanoFB">
+		<div class="sub-group-title">Bônus Fire Burst</div>
+		<div class="dmg-grid">
+			<div class="dmg-cell"><span>Mínimo</span><input id="oFBMinphyDmg" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Máximo</span><input id="oFBMaxphyDmg" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Excelente</span><input id="oFBExcphyDmg" type="text" disabled /></div>
 		</div>
+	</div>
 
-		<div id="pnlDanoWiz">
-			<fieldset class="stackfield">
-				<legend>Dano Mágico</legend>
-				<table>
-					<table>
-						<tr>
-							<td>Mínimo</td><td><input id="oMinwizDmg" type="text" disabled="true" /></td>
-						</tr>
-						<tr>
-							<td>Máximo</td><td><input id="oMaxwizDmg" type="text" disabled="true" /></td>
-						</tr>
-						<tr>
-							<td>Excelente</td><td><input id="oExcwizDmg" type="text" disabled="true" /></td>
-						</tr>
-					</table>
-				</fieldset>
+	<!-- Combo (BK) -->
+	<div id="pnlDanoCombo">
+		<div class="dmg-single">
+			<label>Combo</label>
+			<input id="oCBDmg" type="text" disabled />
+		</div>
+	</div>
+
+	<!-- Magical Damage Output -->
+	<div id="pnlDanoWiz">
+		<div class="sub-group-title">Dano Mágico</div>
+		<div class="dmg-grid">
+			<div class="dmg-cell"><span>Mínimo</span><input id="oMinwizDmg" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Máximo</span><input id="oMaxwizDmg" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Excelente</span><input id="oExcwizDmg" type="text" disabled /></div>
+		</div>
+	</div>
+
+	<!-- ME self buff selector -->
+	<div id="pnlSelf">
+		<div class="form-row">
+			<label>Buff Próprio</label>
+			<select id="iSTBuff">
+				<option value="2">Full (32500)</option>
+				<option value="1">Próprio</option>
+				<option value="0" selected>N/A</option>
+			</select>
+		</div>
+	</div>
+
+	<!-- External ME buff checkbox -->
+	<div id="pnlBuff">
+		<label class="check-label"><input id="iSCME" type="checkbox"/>Buff ME Full (32500 ENE)</label>
+	</div>
+
+	<!-- ME Buff Output -->
+	<div id="pnlBuffME">
+		<div class="sub-group-title">Buff ME</div>
+		<div class="dmg-grid">
+			<div class="dmg-cell"><span>Dano</span><input id="oBuffRed" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Defesa</span><input id="oBuffGreen" type="text" disabled /></div>
+			<div class="dmg-cell"><span>Cura</span><input id="oBuffBlue" type="text" disabled /></div>
+		</div>
+	</div>
+
+</div>
+<!-- ── END TEMPLATES ── -->
+
+<!-- ── MAIN TEMPLATE (cloned per tab) ── -->
+<div style="display:none">
+<section id="model">
+	<div class="tab-content">
+
+		<!-- LEFT: INPUTS -->
+		<div style="display:flex;flex-direction:column;gap:12px;">
+
+			<!-- Char Stats -->
+			<div class="card">
+				<h3>Personagem</h3>
+				<div class="form-row">
+					<label>Resets</label>
+					<input id="iResets" value="0" min="0" max="500" type="number">
+					<label class="check-label" style="margin-left:6px"><input id="iSCVip" type="checkbox"/>VIP</label>
+				</div>
+				<div class="form-row">
+					<label>Level</label>
+					<input value="1" id="iLevel" min="1" max="400" type="number">
+				</div>
+				<div class="form-row">
+					<label>Força</label>
+					<input value="25" id="iStr" min="0" max="32500" type="number">
+				</div>
+				<div class="form-row">
+					<label>Agilidade</label>
+					<input value="25" id="iAgi" min="0" max="32500" type="number">
+				</div>
+				<div class="form-row">
+					<label>Vitalidade</label>
+					<input value="25" id="iVit" min="0" max="32500" type="number">
+				</div>
+				<div class="form-row">
+					<label>Energia</label>
+					<input value="25" id="iEne" min="0" max="32500" type="number">
+				</div>
+				<div id="tblPontos"><!-- DL liderança injected here --></div>
+				<div class="sub-group">
+					<div class="sub-group-title">Quests</div>
+					<div class="check-row">
+						<label class="check-label"><input id="iSCQ3" type="checkbox"/>Quest Lv3 (+200pts)</label>
+					</div>
+				</div>
 			</div>
 
-			<div id="pnlDanoPhy">
-				<fieldset class="stackfield">
-					<legend>Dano Físico</legend>
-					<table>
-						<tr>
-							<td>Minimo</td>
-							<td>Máximo</td>
-							<td>Excelente</td>
-						</tr>
-						<tr>
-							<td><input id="oMinphyDmg" type="text" disabled="true" /></td>
-							<td><input id="oMaxphyDmg" type="text" disabled="true" /></td>
-							<td><input id="oExcphyDmg" type="text" disabled="true" /></td>
-						</tr>
-					</table>
-				</fieldset>
-			</div>			
-			<section id="model">
-				<div onclick="refresh()" onkeyup="refresh()">
-					<h2><a href="#" id="label"></a></h2>
-					<fieldset class="outerfield">
-						<legend>Input</legend>
-						<fieldset class="innerfield">
-							<legend>Char</legend>
-							<table id='tblPontos'>
-								<tr>
-									<td>Resets</td>
-									<td><input id="iResets" value="0" min="0" max="500" type="number"></td>
-									<td><label><input id="iSCVip" type="checkbox"/>Vip</label></td>
-								</tr>
-								<tr>
-									<td>Level</td><td><input value="1" id="iLevel" min="1" max="400" type="number"></td>
-								</tr>
-								<tr>
-									<td>Força</td><td><input value="25" id="iStr" min="0" max="32500" type="number"></td>
-								</tr>
-								<tr>
-									<td>Agilidade</td><td><input value="25" id="iAgi" min="0" max="32500" type="number"></td>
-								</tr>
-								<tr>
-									<td>Vitalidade</td><td><input value="25" id="iVit" min="0" max="32500" type="number"></td>
-								</tr>
-								<tr>
-									<td>Energia</td><td><input value="25" min="0" max="32500" id="iEne" type="number"></td>
-								</tr>
-							</table>
-						</fieldset>
-						<fieldset class="innerfield">
-							<legend>Set</legend>
-							<table>
-								<tr>
-									<td>Vida+4</td><td><input value="0" id="iSVida" min="0" max ="8" type="number"></td>
-								</tr>
-								<tr>
-									<td>Dim+4</td><td><input value="0" id="iSDiminui" min="0" max ="8" type="number"></td>
-								</tr>
-								<tr>
-									<td>DDI+7</td><td><input value="0" id="iSDDI" min="0" max ="6" type="number"></td>
-								</tr>
-								<tr>
-									<td>Life+16</td><td><input value="0" id="iSDeze" min="0" max ="5" type="number"></td>
-								</tr>
-								<tr>
-									<td>PvM+5</td><td><input value="0" id="iSPvm" min="0" max ="8" type="number"></td>
-								</tr>
-								<tr>
-									<td>
-										Set
-									</td>
-									<td>
-										<select id="iSSet">
-											<option value="20">+13</option>
-											<option value="15">+12</option>
-											<option value="10">+11</option>
-											<option value="5">+10</option>
-											<option selected="True" value="0">+0~9</option>
-										</select>
-									</td>
-								</tr>
-							</table>
-						</fieldset>
-						<div id="tblArma" class="innerfield">
-						</div>
-						<div class="innerfield">
-							<fieldset class="stackfield">
-								<legend>Modificadores</legend>
-								<table id="tblSpec">
-									<tr>
-										<td rowspan="3">
-											Pendant
-										</td>
-									</tr>
-									<td>
-										<label><input id="iSCPen7" type="checkbox"/>Velo+7</label>
-									</td>
-									<td>
-										<label><input id="iSCPen10" type="checkbox"/>10%</label>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<label><input id="iSCPen20" type="checkbox"/>lvl/20</label>
-									</td>
-									<td>
-										<label><input id="iSCPen2" type="checkbox"/>2%</label>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										Pet
-									</td>
-									<td>
-										<select id="iSTPet">
-											<option value="6">Horse</option>
-											<option value="5">Azul</option>
-											<option value="4">Preto</option>
-											<option value="3">Fenrir</option>
-											<option value="3">Dino</option>
-											<option value="2">Imp</option>
-											<option value="1">Angel</option>
-											<option value="0" selected="True">N/A</option>
-										</select>
-									</td>
-								</tr>
-							</table>
-						</fieldset>
-						<fieldset class="stackfield">
-							<legend>Buffs</legend>
-							<table id="tblBuffs">
-								<tr>
-									<td>
-										<label><input id="iSCMS" type="checkbox"/>MS Full (70%)</label>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<label><input id="iSCGF" type="checkbox"/>GF Full (135%)</label>
-									</td>
-								</tr>
-							</table>
-						</fieldset>
+			<!-- Equipment -->
+			<div class="card">
+				<h3>Equipamento</h3>
+				<div id="tblArma"><!-- weapon panels injected --></div>
+				<div class="sub-group">
+					<div class="sub-group-title">Set</div>
+					<div class="form-row">
+						<label>Vida +4</label>
+						<input value="0" id="iSVida" min="0" max="8" type="number">
 					</div>
-				</fieldset>
-				<fieldset class="outerfield">
-					<legend>Output</legend>
-					<fieldset class="innerfield">
-						<legend>Status</legend>
-						<table>
-							<tr>
-								<td>Pontos</td>
-								<td><input id="oPontos" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>SD</td><td><input id="oSD" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>HP</td><td><input id="oHP" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>MP</td><td><input id="oMP" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>AG</td><td><input id="oAG" type="text" disabled="true"></td>
-							</tr>
-						</table>
-					</fieldset>
-					<fieldset class="innerfield">
-						<legend>Status Avançados</legend>
-						<table>
-							<tr>
-								<td>Velo de Ataque</td><td><input id="oSpeed" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>Defesa</td><td><input id="oDef" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>Def. Rate(PvM)</td><td><input id="oPvmDr" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>Atk. Rate(PvM)</td><td><input id="oPvmAr" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>Def. Rate(PvP)</td><td><input id="oPvpDr" type="text" disabled="true"></td>
-							</tr>
-							<tr>
-								<td>Atk. Rate(PvP)</td><td><input id="oPvpAr" type="text" disabled="true"></td>
-							</tr>
-						</tr>
-					</table>
-				</fieldset>
-				<div id="tblDanos" class="innerfield">
+					<div class="form-row">
+						<label>Dim +4</label>
+						<input value="0" id="iSDiminui" min="0" max="8" type="number">
+					</div>
+					<div class="form-row">
+						<label>DDI +7</label>
+						<input value="0" id="iSDDI" min="0" max="6" type="number">
+					</div>
+					<div class="form-row">
+						<label>Life +16</label>
+						<input value="0" id="iSDeze" min="0" max="5" type="number">
+					</div>
+					<div class="form-row">
+						<label>PvM +5</label>
+						<input value="0" id="iSPvm" min="0" max="8" type="number">
+					</div>
+					<div class="form-row">
+						<label>Set +</label>
+						<select id="iSSet">
+							<option value="20">+13</option>
+							<option value="15">+12</option>
+							<option value="10">+11</option>
+							<option value="5">+10</option>
+							<option selected value="0">+0~9</option>
+						</select>
+					</div>
 				</div>
-				<fieldset class="innerfield">
-					<legend>Simulador</legend>
-					<table>
-						<tr>
-							<td>Planejado</td><td><input type="number" min="0" id="iSampledmg"/></td>
-						</tr>
-						<tr>
-							<td>Efetivo</td><td><input id="oDefp" type="number" disabled="true"></td>
-						</tr>
-						<tr>
-							<td>Reduzido</td><td><input id="oDefp" type="number" disabled="true"></td>
-						</tr>
-						<tr>
-							<td>Refletido</td><td><input id="oDefp" type="number" disabled="true"></td>
-						</tr>
-					</table>
-				</fieldset>
-			</fieldset>	
-		</div>
-	</section>
+			</div>
+
+			<!-- Modifiers -->
+			<div class="card">
+				<h3>Modificadores</h3>
+				<div id="tblSpec">
+					<div class="form-row">
+						<label>Pet</label>
+						<select id="iSTPet">
+							<option value="6">Horse</option>
+							<option value="5">Azul</option>
+							<option value="4">Preto</option>
+							<option value="3">Fenrir</option>
+							<option value="3">Dino</option>
+							<option value="2">Imp</option>
+							<option value="1">Angel</option>
+							<option value="0" selected>N/A</option>
+						</select>
+					</div>
+					<div class="sub-group">
+						<div class="sub-group-title">Pendant</div>
+						<div class="check-row">
+							<label class="check-label"><input id="iSCPen2" type="checkbox"/>+2%</label>
+						</div>
+					</div>
+					<!-- wings/cape injected here by addTab -->
+				</div>
+			</div>
+
+			<!-- Buffs -->
+			<div class="card">
+				<h3>Buffs</h3>
+				<div class="check-row" id="tblBuffs">
+					<label class="check-label"><input id="iSCMS" type="checkbox"/>MS Full (70%)</label>
+					<label class="check-label"><input id="iSCGF" type="checkbox"/>GF Full (135%)</label>
+					<!-- class-specific buffs injected -->
+				</div>
+			</div>
+
+		</div><!-- end inputs col -->
+
+		<!-- RIGHT: OUTPUTS -->
+		<div style="display:flex;flex-direction:column;gap:12px;">
+
+			<!-- Points -->
+			<div class="card">
+				<h3>Pontos Disponíveis</h3>
+				<input id="oPontos" type="text" disabled style="width:120px;font-size:22px;font-weight:700;color:#a0c8ff;text-align:center;">
+			</div>
+
+			<!-- Status -->
+			<div class="card">
+				<h3>Status Base</h3>
+				<div class="form-row"><label>HP</label><input id="oHP" type="text" disabled></div>
+				<div class="form-row"><label>MP</label><input id="oMP" type="text" disabled></div>
+				<div class="form-row"><label>SD</label><input id="oSD" type="text" disabled></div>
+				<div class="form-row"><label>AG</label><input id="oAG" type="text" disabled></div>
+			</div>
+
+			<!-- Advanced Status -->
+			<div class="card">
+				<h3>Status Avançado</h3>
+				<div class="form-row"><label>Vel. Ataque</label><input id="oSpeed" type="text" disabled></div>
+				<div class="form-row"><label>Defesa</label><input id="oDef" type="text" disabled></div>
+				<div class="form-row"><label>DR PvM</label><input id="oPvmDr" type="text" disabled></div>
+				<div class="form-row"><label>AR PvM</label><input id="oPvmAr" type="text" disabled></div>
+				<div class="form-row"><label>DR PvP</label><input id="oPvpDr" type="text" disabled></div>
+				<div class="form-row"><label>AR PvP</label><input id="oPvpAr" type="text" disabled></div>
+			</div>
+
+			<!-- Damage -->
+			<div class="card" id="tblDanos">
+				<h3>Dano</h3>
+				<!-- damage panels injected here -->
+			</div>
+
+			<!-- Simulator -->
+			<div class="card">
+				<h3>Simulador de Dano</h3>
+				<div class="form-row"><label>Dano Planejado</label><input type="number" min="0" id="iSampledmg" style="width:100px"></div>
+				<div class="form-row"><label>Dano Recebido</label><input id="oSampleResult" type="text" disabled style="width:100px"></div>
+			</div>
+
+		</div><!-- end outputs col -->
+
+	</div><!-- end tab-content grid -->
+</section>
 </div>
-<!-- FIM DOS MODELOS-->
-<div>
+<!-- ── END MAIN TEMPLATE ── -->
+
+<!-- ── APP SHELL ── -->
+<header class="app-header">
+	<h1>MU Calculator</h1>
 	<select id="classes">
-		<option value="1">BK</option>
-		<option value="2">SM</option>
-		<option value="3">ME</option>
-		<option value="4">MG</option>
-		<option value="5">DL</option>
+		<option value="1">BK — Blade Knight</option>
+		<option value="2">SM — Soul Master</option>
+		<option value="3">ME — Muse Elf</option>
+		<option value="4">MG — Magic Gladiator</option>
+		<option value="5">DL — Dark Lord</option>
 	</select>
-	<input type="submit" value="Adicionar" onclick="addTab()" />
-</div>
-<article class="tabs" id="tabs">
-</article>
+	<button onclick="addTab()">+ Adicionar</button>
+</header>
 
-	<script type="text/javascript">
-	// CODELAB: Register service worker.
-	if ('serviceWorker' in navigator) {
-	  window.addEventListener('load', () => {
-	    navigator.serviceWorker.register('service-worker.js')
-		.then((reg) => {
-		  console.log('Service worker registered.', reg);
-		});
-	  });
-	}
-	</script>
+<nav class="tab-nav" id="tabNav"></nav>
 
+<article class="tabs" id="tabs"></article>
+
+<script type="text/javascript">
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log('Service worker registered.', reg))
+      .catch(err => console.log('Service worker registration failed: ', err));
+  });
+}
+
+// Keep tab nav links in sync with hash changes
+function syncTabNav() {
+  var links = document.getElementById('tabNav').querySelectorAll('a');
+  var hash = window.location.hash;
+  links.forEach(function(a) {
+    a.classList.toggle('active', a.getAttribute('href') === hash);
+  });
+  // Default: first tab active when no hash
+  if (!hash && links.length > 0) links[0].classList.add('active');
+}
+window.addEventListener('hashchange', syncTabNav);
+</script>
 </body>
 </html>

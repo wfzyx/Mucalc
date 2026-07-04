@@ -4,41 +4,21 @@ function sanitycheck(prefix){
 	var $ = function( id ) { return document.getElementById( prefix + id ); };
 	var flag = true;
 
-	$('iStr').style['background-color'] = '';
-	if (+$('iStr').value > 32500 || +$('iStr').value < 0){
-		$('iStr').style['background-color'] = 'red';
-		flag = false;
-	}
-	
-	$('iAgi').style['background-color'] = '';
-	if (+$('iAgi').value > 32500 || +$('iAgi').value < 0){
-		$('iAgi').style['background-color'] = 'red';
-		flag = false;
-	}
-
-	$('iVit').style['background-color'] = '';
-	if (+$('iVit').value > 32500 || +$('iVit').value < 0){
-		$('iVit').style['background-color'] = 'red';
-		flag = false;
-	}
-
-	$('iEne').style['background-color'] = '';
-	if (+$('iEne').value > 32500 || +$('iEne').value < 0){
-		$('iEne').style['background-color'] = 'red';
-		flag = false;
-	}
-
-	$('iLevel').style['background-color'] = '';
-	if (+$('iLevel').value > 400 || +$('iLevel').value < 1){
-		$('iLevel').style['background-color'] = 'red';
-		flag = false;
-	}
-
-	$('iResets').style['background-color'] = '';
-	if (+$('iResets').value > 500 || +$('iResets').value < 0){
-		$('iResets').style['background-color'] = 'red';
-		flag = false;
-	}
+	var checks = [
+		['iStr',    0, 32500],
+		['iAgi',    0, 32500],
+		['iVit',    0, 32500],
+		['iEne',    0, 32500],
+		['iLevel',  1,   400],
+		['iResets', 0,   500],
+	];
+	checks.forEach(function(ck) {
+		var el = $(ck[0]);
+		var v = +el.value;
+		var bad = v < ck[1] || v > ck[2];
+		el.classList.toggle('warn-red', bad);
+		if (bad) flag = false;
+	});
 
 	return flag;
 }
@@ -132,140 +112,106 @@ function bugcheck(c, objBug, prefix){
 
 	var $ = function( id ) { return document.getElementById( prefix + id ); };
 
-	$('oMP').style['background-color'] = '';
-	if(bugmp(objBug.mp))
-		$('oMP').style['background-color'] = 'yellow';
+	var mpEl = $('oMP');
+	mpEl.classList.remove('warn-yellow');
+	if (bugmp(objBug.mp)) mpEl.classList.add('warn-yellow');
 
+	var speedEl = $('oSpeed');
+	speedEl.classList.remove('warn-yellow', 'warn-orange');
 	switch(bugvelo(c, objBug.speed)){
-		case 0:
-		$('oSpeed').style['background-color'] = '';
-		break;
-		case 1:
-		$('oSpeed').style['background-color'] = 'yellow';
-		break;
-		case 2:
-		$('oSpeed').style['background-color'] = 'orange';
-		break;
+		case 1: speedEl.classList.add('warn-yellow'); break;
+		case 2: speedEl.classList.add('warn-orange'); break;
 	}
 
 }
 
 function addTab(){
-	var newTabID = $('tabs').getElementsByTagName('section').length - 1;
-	if (newTabID+1 >= 6) return;
-	newTabID = 'tab' + (newTabID+1);
-	var tabs = $("tabs");
-	var newTab = document.createElement("section");
+	var existingSections = $('tabs').getElementsByTagName('section').length;
+	if (existingSections >= 6) return;
+	var newTabID = 'tab' + existingSections;
+	var tabs = $('tabs');
+	var newTab = document.createElement('section');
 	newTab.id = newTabID;
-	var aux = "";
-	aux = $('model').innerHTML;
-	newTab.innerHTML = aux;
+	newTab.setAttribute('oninput', 'refresh(event)');
+	newTab.innerHTML = $('model').innerHTML;
 	tabs.appendChild(newTab);
-	var op = $('classes').options[$('classes').selectedIndex]
+
+	var op = $('classes').options[$('classes').selectedIndex];
+	var classMap = {1:'bk', 2:'sm', 3:'me', 4:'mg', 5:'dl'};
+	var cls = classMap[+op.value];
+	if (!cls) { alert('Classe não implementada'); tabs.removeChild(newTab); return; }
+	$(newTabID).classList.add(cls);
+
+	// Prefix all IDs inside the new tab (divs first, then inputs/selects)
+	['div','input','select'].forEach(function(tag){
+		var els = $(newTabID).getElementsByTagName(tag);
+		for (var i = 0; i < els.length; i++) {
+			if (els[i].id) els[i].id = newTabID + '_' + els[i].id;
+		}
+	});
+
+	// Inject class-specific panels
+	var p = newTabID + '_';
 	switch(+op.value){
-		case 1:
-		$(newTabID).classList.add('bk');
-		break;
-		case 2:
-		$(newTabID).classList.add('sm');
-		break;
-		case 3:
-		$(newTabID).classList.add('me');
-		break;
-		case 4:
-		$(newTabID).classList.add('mg');
-		break;
-		case 5:
-		$(newTabID).classList.add('dl');
-		break;
-		default:
-		alert('Classe não implementada');
-		return;
+		case 1: // BK
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoCombo').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
+		case 2: // SM
+			$(p+'tblArma').innerHTML += $('pnlStaff').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoWiz').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
+		case 3: // ME
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlBuffME').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlSelf').innerHTML;
+			break;
+		case 4: // MG
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblArma').innerHTML += $('pnlStaff').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoWiz').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
+		case 5: // DL
+			$(p+'tblPontos').innerHTML += $('pnlLid').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlCapa').innerHTML;
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoFB').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
 	}
 
-	aux = $(newTabID).getElementsByTagName('a')[0]
-	aux.href = '#'+ newTabID; 
-	aux.innerHTML = op.text; 
-	
-
-	var elements = $(newTabID).getElementsByTagName('table');
-	for(var i = 0; i < elements.length; i++) {
-		if(elements[i].id != 'undefined') {
-			elements[i].id = newTabID + '_' + elements[i].id;
+	// Prefix IDs injected by panels (skip already-prefixed ones)
+	['input','select'].forEach(function(tag){
+		var els = $(newTabID).getElementsByTagName(tag);
+		for (var i = 0; i < els.length; i++) {
+			if (els[i].id && els[i].id.indexOf(newTabID) !== 0) {
+				els[i].id = newTabID + '_' + els[i].id;
+			}
 		}
-	}
+	});
 
-	var elements = $(newTabID).getElementsByTagName('div');
-	for(var i = 0; i < elements.length; i++) {
-		if(elements[i].id != 'undefined') {
-			elements[i].id = newTabID + '_' + elements[i].id;
-		}
-	}
+	// Add tab nav link
+	var nav = $('tabNav');
+	var a = document.createElement('a');
+	a.href = '#' + newTabID;
+	a.className = 'tab-link-' + cls;
+	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
+	a.textContent = classNames[cls] + ' ' + (existingSections + 1);
+	nav.appendChild(a);
 
-
-	switch(+op.value){
-		case 1:
-		$(newTabID).classList.add('bk');
-		$(newTabID + '_tblArma').innerHTML += $('pnlArma').innerHTML;
-		$(newTabID + '_tblSpec').innerHTML += $('pnlAsa').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoCombo').innerHTML;
-		$(newTabID + '_tblBuffs').innerHTML += $('pnlBuff').innerHTML;
-		break;
-		case 2:
-		$(newTabID).classList.add('sm');
-		$(newTabID + '_tblArma').innerHTML += $('pnlStaff').innerHTML;
-		$(newTabID + '_tblSpec').innerHTML += $('pnlAsa').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoWiz').innerHTML;
-		$(newTabID + '_tblBuffs').innerHTML += $('pnlBuff').innerHTML;
-		break;
-		case 3:
-		$(newTabID).classList.add('me');
-		$(newTabID + '_tblArma').innerHTML += $('pnlArma').innerHTML;
-		$(newTabID + '_tblSpec').innerHTML += $('pnlAsa').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlBuffME').innerHTML;
-		$(newTabID + '_tblBuffs').innerHTML += $('pnlSelf').innerHTML;
-		break;
-		case 4:
-		$(newTabID).classList.add('mg');
-		$(newTabID + '_tblArma').innerHTML += $('pnlArma').innerHTML;
-		$(newTabID + '_tblArma').innerHTML += $('pnlStaff').innerHTML;
-		$(newTabID + '_tblSpec').innerHTML += $('pnlAsa').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoWiz').innerHTML;
-		$(newTabID + '_tblBuffs').innerHTML += $('pnlBuff').innerHTML;
-		break;
-		case 5:
-		$(newTabID).classList.add('dl');
-		$(newTabID + '_tblPontos').innerHTML += $('pnlLid').innerHTML;
-		$(newTabID + '_tblSpec').innerHTML += $('pnlCapa').innerHTML;
-		$(newTabID + '_tblArma').innerHTML += $('pnlArma').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
-		$(newTabID + '_tblDanos').innerHTML += $('pnlDanoFB').innerHTML;
-		$(newTabID + '_tblBuffs').innerHTML += $('pnlBuff').innerHTML;
-		break;
-		default:
-		alert('Classe não implementada');
-		return;
-	}
-	
-	var elements = $(newTabID).getElementsByTagName('input');
-	for(var i = 0; i < elements.length; i++) {
-		if(elements[i].id != 'undefined') {
-			elements[i].id = newTabID + '_' + elements[i].id;
-		}
-	}
-
-
-
-	var elements = $(newTabID).getElementsByTagName('select');
-	for(var i = 0; i < elements.length; i++) {
-		if(elements[i].id != 'undefined') {
-			elements[i].id = newTabID + '_' + elements[i].id;
-		}
-	}
-	window.location.href = '#'+ newTabID;
+	window.location.href = '#' + newTabID;
+	syncTabNav();
 }
 
 function calcSample(sample, def, absasa, pdimi, pddi, buffms, gangel){
@@ -287,7 +233,7 @@ function calcSample(sample, def, absasa, pdimi, pddi, buffms, gangel){
 	return (sample | 0);
 }
 
-function calcPontos (c, reset, vip, lvl, str, agi, vit, ene) {
+function calcPontos (c, reset, vip, lvl, str, agi, vit, ene, quest3) {
 
 	var exreset = 0;
 	if (reset > 250){
@@ -307,6 +253,8 @@ function calcPontos (c, reset, vip, lvl, str, agi, vit, ene) {
 		pontos = (100 + ((220+(60*vip)) * reset) + (exreset * 12) + (6 * (lvl-1)) - (str+agi+vit+ene));
 		break;
 	}
+
+	if (quest3) pontos += 200;
 
 	return pontos;
 }
@@ -631,133 +579,134 @@ function calcRate(c, objRate, lvl, objAttr){
 
 
 function refresh(e){
-	var sender = (e && e.target) || (window.event && window.event.srcElement);
-	var prefix = (sender.id).substring(0,5);
-	try{var c = document.getElementById((sender.id).substring(0,4)).className;}
-	catch(err){return;}
-	var $ = function( id ) { return document.getElementById( prefix + id ); };
+	var sender = e && e.target;
+	if (!sender || !sender.id) return;
+	var prefix = sender.id.substring(0, 5);
+	var sectionEl = document.getElementById(sender.id.substring(0, 4));
+	if (!sectionEl) return;
+	var c = sectionEl.className.trim().split(' ')[0];
+	if (!c) return;
+	var $ = function(id){ return document.getElementById(prefix + id); };
 	if (!sanitycheck(prefix)) return;
-	var str = +$('iStr').value;
-	var agi = +$('iAgi').value;
-	var vit = +$('iVit').value;
-	var ene = +$('iEne').value;
 
-	if(c == 'dl')
-		var cmd = +$('iCmd').value;
-	else
-		var cmd = 0;
-
+	var str   = +$('iStr').value;
+	var agi   = +$('iAgi').value;
+	var vit   = +$('iVit').value;
+	var ene   = +$('iEne').value;
+	var cmd   = c === 'dl' ? +$('iCmd').value : 0;
 	var objAttr = {str:str, agi:agi, vit:vit, ene:ene, cmd:cmd};
 
-	var lvl = +$('iLevel').value;
-	var reset = +$('iResets').value;
-	var vip = +$('iSCVip').checked;
-	var pvida = +$('iSVida').value;
-	var pdimi = +$('iSDiminui').value;
-	var pddi = +$('iSDDI').value;
-	var pdeze = +$('iSDeze').value;
-	var ppvm = +$('iSPvm').value;
-	var bdef = +$('iSSet').options[$('iSSet').selectedIndex].value;
-	if(c == 'sm' || c == 'mg')
-		var staff = (+$('iSStaff').value) / 100;
-	var tasa = +$('iSTAsa').options[$('iSTAsa').selectedIndex].value;
-	var lasa = +$('iSLAsa').value;
-	var imp = +$('iSTPet').options[$('iSTPet').selectedIndex].value == 2 ? 1 : 0;
-	var gangel = +$('iSTPet').options[$('iSTPet').selectedIndex].value == 1 ? 1 : 0;
-	var addwp = +$('iSCWp2').checked;
+	var lvl     = +$('iLevel').value;
+	var reset   = +$('iResets').value;
+	var vip     = +$('iSCVip').checked;
+	var quest3  = +$('iSCQ3').checked;
+	var pvida   = +$('iSVida').value;
+	var pdimi   = +$('iSDiminui').value;
+	var pddi    = +$('iSDDI').value;
+	var pdeze   = +$('iSDeze').value;
+	var ppvm    = +$('iSPvm').value;
+	var bdef    = +$('iSSet').options[$('iSSet').selectedIndex].value;
+	var staff   = (c === 'sm' || c === 'mg') ? (+$('iSStaff').value) / 100 : 0;
+
+	var asaEl = $('iSTAsa'), capaEl = $('iSTCapa');
+	var tasa = asaEl ? +asaEl.options[asaEl.selectedIndex].value : 0;
+	var lasaEl = $('iSLAsa'), lcapaEl = $('iSLCapa');
+	var lasa = lasaEl ? +lasaEl.value : (lcapaEl ? +lcapaEl.value : 0);
+	if (c === 'dl' && capaEl) { tasa = +capaEl.options[capaEl.selectedIndex].value; }
+
+	var petVal  = +$('iSTPet').options[$('iSTPet').selectedIndex].value;
+	var imp     = petVal === 2 ? 1 : 0;
+	var gangel  = petVal === 1 ? 1 : 0;
+	var addwp   = +($('iSCWp2') ? $('iSCWp2').checked : 0);
 	var addpendant = +$('iSCPen2').checked;
-	var buffms = +$('iSCMS').checked;
-	var buffgf = +$('iSCGF').checked;
-	var dmgbuff = 0;
-	var defbuff = 0;
-	var sample = +$('iSampledmg').value;
-	if(c != 'sm'){
-		var wpmin = 0;
-		var wpmax = 0;
-		if(+$('iSWpmin').value > 0)
-			wpmin = +$('iSWpmin').value;
-		if(+$('iSWpmax').value > 0)
-			wpmax = +$('iSWpmax').value;
+	var buffms  = +$('iSCMS').checked;
+	var buffgf  = +$('iSCGF').checked;
+	var dmgbuff = 0, defbuff = 0;
+	var sample  = +$('iSampledmg').value;
+
+	var wpmin = 0, wpmax = 0;
+	if (c !== 'sm') {
+		var wpminEl = $('iSWpmin'), wpmaxEl = $('iSWpmax');
+		if (wpminEl && +wpminEl.value > 0) wpmin = +wpminEl.value;
+		if (wpmaxEl && +wpmaxEl.value > 0) wpmax = +wpmaxEl.value;
 	}
 
-	if (c == 'me'){
-		switch(+$('iSTBuff').options[$('iSTBuff').selectedIndex].value){
-			case 0:
-			break;
+	if (c === 'me') {
+		var buffSel = $('iSTBuff');
+		switch(buffSel ? +buffSel.options[buffSel.selectedIndex].value : 0){
 			case 1:
-			dmgbuff = ((+$('iEne').value / 7) + 3) | 0;
-			defbuff = ((+$('iEne').value / 8) + 2) | 0;
-			break;
+				dmgbuff = ((+$('iEne').value / 7) + 3) | 0;
+				defbuff = ((+$('iEne').value / 8) + 2) | 0;
+				break;
 			case 2:
-			dmgbuff = ((32500 / 7) + 3) | 0;
-			defbuff = ((32500 / 8) + 2) | 0;
-			break;
+				dmgbuff = ((32500 / 7) + 3) | 0;
+				defbuff = ((32500 / 8) + 2) | 0;
+				break;
 		}
-	}
-	else{
-		if(+$('iSCME').checked == 1){
+	} else {
+		var meEl = $('iSCME');
+		if (meEl && +meEl.checked) {
 			dmgbuff = ((32500 / 7) + 3) | 0;
 			defbuff = ((32500 / 8) + 2) | 0;
 		}
 	}
 
-	var red = ((ene/7)+3) | 0;
-	var	green = ((ene/8)+2) | 0;
-	var	blue = ((ene/5)+5) | 0;
+	var red   = ((ene/7)+3) | 0;
+	var green = ((ene/8)+2) | 0;
+	var blue  = ((ene/5)+5) | 0;
 
-	var pontos = calcPontos(c, reset, vip, lvl, str, agi, vit, ene);
-	var objAsa = {iatasa:0,Tiatasa:0,idfasa:0,Tidfasa:0,absasa:0,Tabsasa:0, lasa:lasa, tasa:tasa};
-	var speed = calcSpeed(c, agi);
+	var pontos  = calcPontos(c, reset, vip, lvl, str, agi, vit, ene, quest3);
+	var objAsa  = {iatasa:0, Tiatasa:0, idfasa:0, Tidfasa:0, absasa:0, Tabsasa:0, lasa:lasa, tasa:tasa};
+	var speed   = calcSpeed(c, agi);
 	speed += calcAsa(objAsa);
-	var hp = calcHP(c, lvl, vit, pvida, buffgf);	
-	var mp = calcMP(c, lvl, ene);
-	var ag = calcAG(c, objAttr);
+	var hp  = calcHP(c, lvl, vit, pvida, buffgf);
+	var mp  = calcMP(c, lvl, ene);
+	var ag  = calcAG(c, objAttr);
 	var def = calcDef(c, agi, defbuff, objAsa, pdeze, bdef);
-	sample = calcSample(sample, def, objAsa.absasa, pdimi, pddi, buffms, gangel);
-	var sd = calcSD(objAttr, def, lvl);
+	sample  = calcSample(sample, def, objAsa.absasa, pdimi, pddi, buffms, gangel);
+	var sd  = calcSD(objAttr, def, lvl);
 
-	var objDmg = {};
-	var objOpt = {pen:addpendant, wp:addwp, stfp:staff, imp:imp, iatasa:objAsa.iatasa, dmgbuff:dmgbuff, wpmin:wpmin, wpmax:wpmax};
+	var objDmg  = {};
+	var objOpt  = {pen:addpendant, wp:addwp, stfp:staff, imp:imp, iatasa:objAsa.iatasa, dmgbuff:dmgbuff, wpmin:wpmin, wpmax:wpmax};
 	calcDmg(c, objDmg, objOpt, str, agi, ene, cmd);
 
 	var objRate = {pvmdr:0, pvmar:0, pvpdr:0, pvpar:0, ppvm:ppvm, def:def};
 	calcRate(c, objRate, lvl, objAttr);
 
 	$('oPontos').value = pontos;
-	if(c == 'sm' || c == 'mg'){
+	if (c === 'sm' || c === 'mg'){
 		$('oMinwizDmg').value = objDmg.wmindmg;
 		$('oMaxwizDmg').value = objDmg.wmaxdmg;
 		$('oExcwizDmg').value = objDmg.wexcdmg;
 	}
-	if(c != 'sm'){
+	if (c !== 'sm'){
 		$('oMinphyDmg').value = objDmg.pmindmg;
 		$('oMaxphyDmg').value = objDmg.pmaxdmg;
 		$('oExcphyDmg').value = objDmg.pexcdmg;
 	}
-	if(c == 'dl'){
+	if (c === 'dl'){
 		$('oFBMinphyDmg').value = objDmg.fbmindmg;
 		$('oFBMaxphyDmg').value = objDmg.fbmaxdmg;
 		$('oFBExcphyDmg').value = objDmg.fbexcdmg;
 	}
-	if(c == 'bk')
-		$('oCBDmg').value = objDmg.cbdmg;
+	if (c === 'bk') $('oCBDmg').value = objDmg.cbdmg;
 
-	$('oHP').value = hp;
-	$('oMP').value = mp;
-	$('oAG').value = ag;
-	$('oSD').value = sd;
-	$('oDef').value = def;
-	$('oDefp').value = sample;
+	$('oHP').value    = hp;
+	$('oMP').value    = mp;
+	$('oAG').value    = ag;
+	$('oSD').value    = sd;
+	$('oDef').value   = def;
 	$('oSpeed').value = speed;
 	$('oPvmDr').value = objRate.pvmdr;
 	$('oPvmAr').value = objRate.pvmar;
 	$('oPvpDr').value = objRate.pvpdr;
 	$('oPvpAr').value = objRate.pvpar;
-	if(c == 'me'){
-		$('oBuffRed').value = red;
+	var sampleEl = $('oSampleResult');
+	if (sampleEl) sampleEl.value = sample;
+	if (c === 'me'){
+		$('oBuffRed').value   = red;
 		$('oBuffGreen').value = green;
-		$('oBuffBlue').value = blue;
+		$('oBuffBlue').value  = blue;
 	}
-	var objBug = {mp:mp, speed:speed};
-	bugcheck(c, objBug, prefix);
+	bugcheck(c, {mp:mp, speed:speed}, prefix);
 }
