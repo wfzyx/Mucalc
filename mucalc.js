@@ -254,7 +254,7 @@ function calcPontos (c, reset, vip, lvl, str, agi, vit, ene, quest3) {
 		break;
 	}
 
-	if (quest3) pontos += 200;
+	if (quest3) pontos += 70;
 
 	return pontos;
 }
