@@ -362,13 +362,13 @@ function calcHP (c, lvl, vit, pvida, buffgf) {
 		break;
 	}
 
-	var extra = hp * (1.35*buffgf);
-
 	for (var i = 0; i < pvida; i++) {
 		hp = hp*1.04;
 	}
 
-	return (hp+extra | 0);
+	hp = hp * (1 + (1.35 * buffgf));
+
+	return (hp | 0);
 }
 
 function calcMP (c, lvl, ene) {
