@@ -197,10 +197,35 @@
 				</div>
 			</div>
 
-			<!-- Equipment -->
+			<!-- Equipment + Accessories (merged) -->
 			<div class="card">
 				<h3>Equipamento</h3>
 				<div id="tblArma"><!-- weapon panels injected --></div>
+				<div id="tblSpec">
+					<!-- Pendant right below weapon (similar slot) -->
+					<div class="sub-group">
+						<div class="sub-group-title">Pendant</div>
+						<div class="check-row">
+							<label class="check-label"><input id="iSCPen2" type="checkbox"/>+2%</label>
+						</div>
+					</div>
+					<!-- Wings / Cape injected here by addTab -->
+				</div>
+				<div class="sub-group">
+					<div class="form-row">
+						<label>Pet</label>
+						<select id="iSTPet">
+							<option value="6">Horse</option>
+							<option value="5">Azul</option>
+							<option value="4">Preto</option>
+							<option value="3">Fenrir</option>
+							<option value="3">Dino</option>
+							<option value="2">Imp</option>
+							<option value="1">Angel</option>
+							<option value="0" selected>N/A</option>
+						</select>
+					</div>
+				</div>
 				<div class="sub-group">
 					<div class="sub-group-title">Set</div>
 					<div class="form-row">
@@ -233,33 +258,6 @@
 							<option selected value="0">+0~9</option>
 						</select>
 					</div>
-				</div>
-			</div>
-
-			<!-- Modifiers -->
-			<div class="card">
-				<h3>Modificadores</h3>
-				<div id="tblSpec">
-					<div class="form-row">
-						<label>Pet</label>
-						<select id="iSTPet">
-							<option value="6">Horse</option>
-							<option value="5">Azul</option>
-							<option value="4">Preto</option>
-							<option value="3">Fenrir</option>
-							<option value="3">Dino</option>
-							<option value="2">Imp</option>
-							<option value="1">Angel</option>
-							<option value="0" selected>N/A</option>
-						</select>
-					</div>
-					<div class="sub-group">
-						<div class="sub-group-title">Pendant</div>
-						<div class="check-row">
-							<label class="check-label"><input id="iSCPen2" type="checkbox"/>+2%</label>
-						</div>
-					</div>
-					<!-- wings/cape injected here by addTab -->
 				</div>
 			</div>
 
