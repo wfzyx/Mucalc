@@ -503,7 +503,7 @@ function calcPDmg(c, objDmg, objOpt, str, ene, agi){
 		t = 100;
 		break;
 		case 'mg':
-		t = 800;
+		t = Math.min(200 + (2.4 * objOpt.reset), 800);
 		break;
 		case 'dl':
 		t = 200 + (ene/20);
@@ -688,7 +688,7 @@ function refresh(e){
 	var sd  = calcSD(objAttr, def, lvl);
 
 	var objDmg  = {};
-	var objOpt  = {pen:addpendant, wp:addwp, stfp:staff, imp:imp, iatasa:objAsa.iatasa, dmgbuff:dmgbuff, wpmin:wpmin, wpmax:wpmax};
+	var objOpt  = {pen:addpendant, wp:addwp, stfp:staff, imp:imp, iatasa:objAsa.iatasa, dmgbuff:dmgbuff, wpmin:wpmin, wpmax:wpmax, reset:reset};
 	calcDmg(c, objDmg, objOpt, str, agi, ene, cmd);
 
 	var objRate = {pvmdr:0, pvmar:0, pvpdr:0, pvpar:0, ppvm:ppvm, def:def};
