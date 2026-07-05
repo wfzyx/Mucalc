@@ -201,6 +201,20 @@ function addTab(){
 		}
 	});
 
+	// Set class-specific starting stats
+	var startStats = {
+		bk: {iStr:28, iAgi:20, iVit:25, iEne:10},
+		sm: {iStr:18, iAgi:18, iVit:15, iEne:30},
+		me: {iStr:22, iAgi:25, iVit:20, iEne:15},
+		mg: {iStr:26, iAgi:26, iVit:26, iEne:16},
+		dl: {iStr:26, iAgi:20, iVit:20, iEne:15},
+	};
+	var stats = startStats[cls];
+	Object.keys(stats).forEach(function(id) {
+		var el = document.getElementById(newTabID + '_' + id);
+		if (el) el.value = stats[id];
+	});
+
 	// Add tab nav link
 	var nav = $('tabNav');
 	var a = document.createElement('a');
@@ -593,7 +607,12 @@ function refresh(e){
 	var agi   = +$('iAgi').value;
 	var vit   = +$('iVit').value;
 	var ene   = +$('iEne').value;
-	var cmd   = c === 'dl' ? +$('iCmd').value : 0;
+	var cmd = 0;
+	if (c === 'dl') {
+		cmd = reset * 130;
+		var cmdEl = $('iCmd');
+		if (cmdEl) cmdEl.value = cmd;
+	}
 	var objAttr = {str:str, agi:agi, vit:vit, ene:ene, cmd:cmd};
 
 	var lvl     = +$('iLevel').value;
