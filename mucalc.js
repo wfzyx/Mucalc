@@ -366,7 +366,7 @@ function calcHP (c, lvl, vit, pvida, buffgf) {
 		hp = hp*1.04;
 	}
 
-	hp = hp * (1 + (1.35 * buffgf));
+	hp = hp * (1 + (1.30 * buffgf));
 
 	return (hp | 0);
 }
