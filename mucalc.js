@@ -268,7 +268,7 @@ function calcPontos (c, reset, vip, lvl, str, agi, vit, ene, quest3) {
 		break;
 	}
 
-	if (quest3) pontos += 70;
+	pontos += quest3;
 
 	return pontos;
 }
@@ -618,7 +618,9 @@ function refresh(e){
 	var lvl     = +$('iLevel').value;
 	var reset   = +$('iResets').value;
 	var vip     = +$('iSCVip').checked;
-	var quest3  = +$('iSCQ3').checked;
+	var quest3  = ($('iSCQ3a').checked ? 20 : 0)
+	            + ($('iSCQ3b').checked ? 20 : 0)
+	            + ($('iSCQ3c').checked ? 30 : 0);
 	var pvida   = +$('iSVida').value;
 	var pdimi   = +$('iSDiminui').value;
 	var pddi    = +$('iSDDI').value;
