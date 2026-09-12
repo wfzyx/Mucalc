@@ -330,7 +330,16 @@
 
 					<!-- Row 2, Col 1: Weapon (Arma / Staff) -->
 					<div class="inv-slot slot-weap">
-						<div class="slot-header"><span class="slot-icon">⚔️</span><span class="slot-title">Arma</span></div>
+						<div class="slot-header">
+							<div class="slot-header-left">
+								<span class="slot-icon">⚔️</span>
+								<span class="slot-title">Arma</span>
+							</div>
+							<label class="slot-opt-chip chip-2h" title="Arma de duas mãos (desativa o escudo/offhand)">
+								<input type="checkbox" id="iSC2H" onchange="toggleTwoHanded(this)">
+								<span>2 Mãos</span>
+							</label>
+						</div>
 						<div class="slot-body" id="tblArma">
 							<!-- weapon panel injected here -->
 						</div>
@@ -349,14 +358,30 @@
 					</div>
 
 					<!-- Row 2, Col 3: Offhand (Escudo / Arma Secundária) -->
-					<div class="inv-slot slot-shield">
-						<div class="slot-header"><span class="slot-icon">🛡️</span><span class="slot-title">Offhand / Escudo</span></div>
-						<div class="slot-opts">
+					<div class="inv-slot slot-shield" id="slotOffhand">
+						<div class="slot-header">
+							<span class="slot-icon" id="lblOffhandIcon">🛡️</span>
+							<select id="iSOffhandType" class="select-offhand-type" onchange="toggleOffhandType(this)">
+								<option value="shield">Escudo</option>
+								<option value="weapon">Arma Secundária</option>
+							</select>
+						</div>
+
+						<!-- Escudo Mode -->
+						<div class="slot-opts offhand-shield-opts" id="pnlOffhandShield">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
 							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>VID</span></label>
 							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PVM</span></label>
 							<label class="slot-opt-chip chip-ddi"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
+						</div>
+
+						<!-- Arma Secundária Mode -->
+						<div class="slot-weap-row offhand-weap-opts" id="pnlOffhandWeap" style="display:none;">
+							<input value="0" min="0" id="iSWp2min" type="number" placeholder="Mín" title="Dano Físico Secundário Mínimo" oninput="refresh(event)">
+							<span class="weap-dash">-</span>
+							<input value="0" min="0" id="iSWp2max" type="number" placeholder="Máx" title="Dano Físico Secundário Máximo" oninput="refresh(event)">
+							<label class="slot-opt-chip chip-wp" title="Dano Excelente Secundário +2%"><input id="iSCWp2b" type="checkbox" onchange="refresh(event)"/><span>+2%</span></label>
 						</div>
 					</div>
 
@@ -400,11 +425,12 @@
 					<div class="inv-slot slot-pendant">
 						<div class="slot-header"><span class="slot-icon">📿</span><span class="slot-title">Pendant</span></div>
 						<div class="slot-opts">
-							<label class="slot-opt-chip chip-wp"><input type="checkbox" id="iSCPen2"><span>Exc +2%</span></label>
-							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
-							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
+							<label class="slot-opt-chip chip-wp" title="Aumento de Dano +2%"><input type="checkbox" id="iSCPen2" onchange="refresh(event)"><span>+2%</span></label>
+							<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input type="checkbox" id="iSCPenExc" onchange="refresh(event)"><span>Exc 10%</span></label>
+							<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input type="checkbox" id="iSCPenSpeed" onchange="refresh(event)"><span>Vel +7</span></label>
+							<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input type="checkbox" id="iSCPenLvl20" onchange="refresh(event)"><span>Nv/20</span></label>
 							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>VID</span></label>
-							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PVM</span></label>
+							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
 						</div>
 					</div>
 
@@ -502,38 +528,42 @@
 </div>
 <!-- ── END MAIN TEMPLATE ── -->
 
-<!-- ── APP SHELL ── -->
+<!-- ── APP SHELL (Single-Row Unified Cockpit Header) ── -->
 <header class="app-header">
-	<div class="header-brand">
-		<div class="brand-logo">
-			<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+	<div class="header-left">
+		<div class="header-brand">
+			<div class="brand-logo">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+			</div>
+			<div class="brand-text">
+				<h1>MU Calc</h1>
+				<span class="brand-badge">STUDIO</span>
+			</div>
 		</div>
-		<div class="brand-text">
-			<h1>MU Calc</h1>
-			<span class="brand-badge">STUDIO</span>
-		</div>
-	</div>
 
-	<div class="header-actions">
 		<!-- Current Server Pill (Click to open overlay) -->
 		<button type="button" class="current-server-pill" onclick="openProviderOverlay()" title="Clique para trocar de servidor">
 			<span class="server-indicator-dot"></span>
 			<span id="lblCurrentServer">MUCABrasil</span>
 			<span class="server-change-hint">Trocar</span>
 		</button>
+	</div>
 
-		<select id="classes">
+	<!-- TABS IN THE MIDDLE OF ROW 1 -->
+	<nav class="tab-nav header-tab-dock" id="tabNav"></nav>
+
+	<div class="header-actions">
+		<select id="classes" title="Selecionar classe para adicionar">
 			<option value="1">BK — Blade Knight</option>
 			<option value="2">SM — Soul Master</option>
 			<option value="3">ME — Muse Elf</option>
 			<option value="4">MG — Magic Gladiator</option>
 			<option value="5">DL — Dark Lord</option>
 		</select>
-		<button onclick="addTab()">+ Adicionar</button>
+		<button type="button" class="btn-add-tab" onclick="addTab()" title="Adicionar novo personagem">+ Adicionar</button>
+		<button type="button" class="btn-delete-tab" onclick="closeTab()" title="Excluir aba ativa">✕ Excluir</button>
 	</div>
 </header>
-
-<nav class="tab-nav" id="tabNav"></nav>
 
 <article class="tabs" id="tabs"></article>
 

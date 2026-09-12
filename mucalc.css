@@ -1,3 +1,60 @@
+/* ── THEME PALETTES (MUCABrasil vs Land of Muren) ── */
+body[data-server="mucabrasil"],
+:root:not([data-server="muren"]) {
+  --bg: #06070d;
+  --card-bg: rgba(10, 13, 24, 0.88);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-border-hover: rgba(239, 68, 68, 0.35);
+  --card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  --accent: #ef4444;
+  --accent-glow: rgba(239, 68, 68, 0.35);
+  --accent-hover: #dc2626;
+
+  --server-glow: rgba(239, 68, 68, 0.25);
+  --brand-gradient: linear-gradient(135deg, #ffffff 0%, #fca5a5 100%);
+}
+
+body[data-server="muren"] {
+  --bg: #09080b;
+  --card-bg: rgba(18, 16, 15, 0.88);
+  --card-border: rgba(245, 158, 11, 0.18);
+  --card-border-hover: rgba(245, 158, 11, 0.45);
+  --card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+
+  --accent: #f59e0b;
+  --accent-glow: rgba(245, 158, 11, 0.35);
+  --accent-hover: #d97706;
+
+  --server-glow: rgba(245, 158, 11, 0.35);
+  --brand-gradient: linear-gradient(135deg, #ffffff 0%, #fcd34d 100%);
+}
+
+body[data-server="muren"] .app-header {
+  border-bottom-color: rgba(245, 158, 11, 0.25);
+}
+
+body[data-server="muren"] .server-indicator-dot {
+  background: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+}
+
+body[data-server="muren"] .current-server-pill {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: rgba(24, 20, 14, 0.8);
+}
+
+body[data-server="muren"] .btn-add-tab {
+  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%) !important;
+  border-color: rgba(251, 191, 36, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3) !important;
+}
+
+body[data-server="muren"] .card h3::before {
+  background: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+}
+
 :root {
   --bg: #05070e;
   --card-bg: rgba(9, 13, 26, 0.88);
@@ -238,13 +295,13 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   transform: translateX(4px);
 }
 
-/* ── App Header ── */
+/* ── App Header (Unified Single-Row Dock) ── */
 .app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 16px;
+  padding: 6px 14px;
   background: rgba(5, 7, 14, 0.94);
   border-bottom: 1px solid var(--card-border);
   backdrop-filter: blur(20px);
@@ -252,6 +309,14 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   position: sticky;
   top: 0;
   z-index: 100;
+  height: 44px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .header-brand {
@@ -264,8 +329,8 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   background: linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(99, 102, 241, 0.12));
   border: 1px solid rgba(99, 102, 241, 0.4);
@@ -279,7 +344,7 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 }
 
 .header-brand h1 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -289,20 +354,116 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 }
 
 .brand-badge {
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 800;
   letter-spacing: 0.12em;
-  padding: 1px 5px;
+  padding: 1px 4px;
   border-radius: 4px;
   background: rgba(99, 102, 241, 0.2);
   border: 1px solid rgba(99, 102, 241, 0.35);
   color: #c7d2fe;
 }
 
+/* ── Center Header Tabs Dock ── */
+.header-tab-dock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 48vw;
+  padding: 0 4px;
+}
+.header-tab-dock::-webkit-scrollbar { display: none; }
+
+.header-tab-dock a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px 3px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.header-tab-dock a:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tab-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.tab-close-btn:hover {
+  background: rgba(239, 68, 68, 0.5);
+  color: #ffffff;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.btn-add-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--accent-glow);
+  transition: all 0.18s ease;
+}
+
+.btn-add-tab:hover {
+  transform: translateY(-1px);
+}
+
+.btn-delete-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-delete-tab:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #ffffff;
 }
 
 /* ── Current Server Pill ── */
@@ -763,11 +924,34 @@ article.tabs section:target { display: block; }
   border-color: rgba(255, 255, 255, 0.14);
 }
 
-.slot-header {
+/* ── 2-Handed & Offhand specifics ── */
+.slot-header-left {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-bottom: 3px;
+}
+
+.chip-2h input:checked + span {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: rgba(239, 68, 68, 0.6);
+  color: #fca5a5;
+}
+
+.slot-disabled {
+  opacity: 0.35 !important;
+  pointer-events: none !important;
+  filter: grayscale(0.85);
+  border-style: dashed !important;
+}
+
+.select-offhand-type {
+  font-size: 9px;
+  padding: 1px 4px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-label);
+  cursor: pointer;
 }
 
 .slot-icon {

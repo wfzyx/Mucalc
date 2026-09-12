@@ -47,6 +47,9 @@ function setProvider(prov) {
 
 function updateProviderUI() {
 	var prov = getProvider();
+	if (document.body) document.body.dataset.server = prov;
+	if (document.documentElement) document.documentElement.dataset.server = prov;
+
 	var lblServer = document.getElementById('lblCurrentServer');
 	if (lblServer) {
 		lblServer.textContent = prov === 'muren' ? 'Land of Muren' : 'MUCABrasil';
@@ -59,6 +62,87 @@ function updateProviderUI() {
 			applyProviderToTab(sections[i].id, prov);
 		}
 	}
+}
+
+function closeTab(tabId) {
+	var tabs = $('tabs');
+	if (!tabs) return;
+	var sections = tabs.getElementsByTagName('section');
+	if (sections.length <= 1) {
+		alert('É necessário manter ao menos uma aba de personagem aberta.');
+		return;
+	}
+
+	if (!tabId) {
+		var hash = window.location.hash;
+		if (hash && hash.indexOf('#tab') === 0) {
+			tabId = hash.substring(1);
+		} else if (sections.length > 0) {
+			tabId = sections[0].id;
+		}
+	}
+
+	var targetSec = document.getElementById(tabId);
+	var targetLink = document.querySelector('#tabNav a[href="#' + tabId + '"]');
+	if (targetSec) targetSec.remove();
+	if (targetLink) targetLink.remove();
+
+	var remaining = tabs.getElementsByTagName('section');
+	if (remaining.length > 0) {
+		window.location.hash = '#' + remaining[0].id;
+		syncTabNav();
+	}
+	saveBuilds();
+}
+
+function toggleTwoHanded(el) {
+	var section = el.closest ? el.closest('section') : (function() {
+		var node = el;
+		while (node && node.tagName !== 'SECTION') node = node.parentNode;
+		return node;
+	})();
+	if (!section) return;
+	var p = section.id + '_';
+	var slotOffhand = document.getElementById(p + 'slotOffhand');
+	if (slotOffhand) {
+		slotOffhand.classList.toggle('slot-disabled', el.checked);
+		if (el.checked) {
+			var chips = slotOffhand.querySelectorAll('input[type="checkbox"]');
+			for (var i = 0; i < chips.length; i++) chips[i].checked = false;
+			syncInventoryOpts(el);
+		}
+	}
+	refresh({ target: el });
+}
+
+function toggleOffhandType(el) {
+	var section = el.closest ? el.closest('section') : (function() {
+		var node = el;
+		while (node && node.tagName !== 'SECTION') node = node.parentNode;
+		return node;
+	})();
+	if (!section) return;
+	var p = section.id + '_';
+	var mode = el.value;
+	var pnlShield = document.getElementById(p + 'pnlOffhandShield');
+	var pnlWeap = document.getElementById(p + 'pnlOffhandWeap');
+	var icon = document.getElementById(p + 'lblOffhandIcon');
+
+	if (pnlShield && pnlWeap) {
+		if (mode === 'weapon') {
+			pnlShield.style.display = 'none';
+			pnlWeap.style.display = 'flex';
+			if (icon) icon.textContent = '⚔️';
+			var chips = pnlShield.querySelectorAll('input[type="checkbox"]');
+			for (var i = 0; i < chips.length; i++) chips[i].checked = false;
+			syncInventoryOpts(el);
+		} else {
+			pnlShield.style.display = 'flex';
+			pnlWeap.style.display = 'none';
+			if (icon) icon.textContent = '🛡️';
+		}
+	}
+	refresh({ target: el });
 }
 
 function serializeBuilds() {
@@ -220,7 +304,25 @@ function restoreTab(tabData, index) {
 	a.href = '#' + newTabID;
 	a.className = 'tab-link-' + cls;
 	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
-	a.textContent = tabData.title || (classNames[cls] + ' ' + (index + 1));
+
+	var titleSpan = document.createElement('span');
+	titleSpan.textContent = tabData.title || (classNames[cls] + ' ' + (index + 1));
+	a.appendChild(titleSpan);
+
+	var closeBtn = document.createElement('button');
+	closeBtn.type = 'button';
+	closeBtn.className = 'tab-close-btn';
+	closeBtn.title = 'Fechar esta aba';
+	closeBtn.textContent = '×';
+	closeBtn.onclick = (function(tid) {
+		return function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			closeTab(tid);
+		};
+	})(newTabID);
+	a.appendChild(closeBtn);
+
 	nav.appendChild(a);
 
 	var anyCheck = newTab.querySelector('.slot-opts input[type="checkbox"]');
@@ -267,6 +369,19 @@ function loadBuilds(provider) {
 function applyProviderToTab(tabId, prov) {
 	var isMuren = prov === 'muren';
 	var p = tabId + '_';
+
+	// Item caps: Land of Muren only accepts items up until +13
+	var asaLvlEl = document.getElementById(p + 'iSLAsa');
+	var capaLvlEl = document.getElementById(p + 'iSLCapa');
+	if (asaLvlEl) {
+		asaLvlEl.max = isMuren ? 13 : 15;
+		if (isMuren && +asaLvlEl.value > 13) asaLvlEl.value = 13;
+	}
+	if (capaLvlEl) {
+		capaLvlEl.max = isMuren ? 13 : 15;
+		if (isMuren && +capaLvlEl.value > 13) capaLvlEl.value = 13;
+	}
+
 	var resetEl = document.getElementById(p + 'iResets');
 	if (resetEl) {
 		resetEl.max = isMuren ? 100 : 500;
@@ -642,7 +757,25 @@ function addTab(){
 	a.href = '#' + newTabID;
 	a.className = 'tab-link-' + cls;
 	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
-	a.textContent = classNames[cls] + ' ' + (existingSections + 1);
+
+	var titleSpan = document.createElement('span');
+	titleSpan.textContent = classNames[cls] + ' ' + (existingSections + 1);
+	a.appendChild(titleSpan);
+
+	var closeBtn = document.createElement('button');
+	closeBtn.type = 'button';
+	closeBtn.className = 'tab-close-btn';
+	closeBtn.title = 'Fechar esta aba';
+	closeBtn.textContent = '×';
+	closeBtn.onclick = (function(tid) {
+		return function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			closeTab(tid);
+		};
+	})(newTabID);
+	a.appendChild(closeBtn);
+
 	nav.appendChild(a);
 
 	window.location.href = '#' + newTabID;
@@ -872,12 +1005,12 @@ function calcSD (objAttr, def, lvl) {
 
 function calcWDmg(objDmg, objOpt, ene){
 	objDmg.wmindmg = (ene / 9) * (1+(objOpt.pen*0.02)) * (1+(objOpt.wp*0.02)) * (1+objOpt.stfp);
-	objDmg.wmindmg += objOpt.dmgbuff;
+	objDmg.wmindmg += objOpt.dmgbuff + (objOpt.penLvlDmg || 0);
 	objDmg.wmindmg *= (1+objOpt.iatasa) * (1+(objOpt.imp*0.3));
 	objDmg.wmindmg |= 0;
 
 	objDmg.wmaxdmg = (ene / 4) * (1+(objOpt.pen*0.02)) * (1+(objOpt.wp*0.02)) * (1+objOpt.stfp);
-	objDmg.wmaxdmg += objOpt.dmgbuff;
+	objDmg.wmaxdmg += objOpt.dmgbuff + (objOpt.penLvlDmg || 0);
 	objDmg.wmaxdmg *= (1+objOpt.iatasa) * (1+(objOpt.imp*0.3));
 	objDmg.wmaxdmg |= 0;
 }
@@ -904,18 +1037,21 @@ function calcPDmg(c, objDmg, objOpt, str, ene, agi){
 		break;
 	}
 
-	objDmg.pmindmg += objOpt.wpmin;
-	objDmg.pmindmg *= (1+(objOpt.pen*0.02)) * (1+(objOpt.wp*0.02));
+	var totalWpMin = objOpt.wpmin + (objOpt.wp2min || 0);
+	var totalWpMax = objOpt.wpmax + (objOpt.wp2max || 0);
+
+	objDmg.pmindmg += totalWpMin + (objOpt.penLvlDmg || 0);
+	objDmg.pmindmg *= (1+(objOpt.pen*0.02)) * (1+(objOpt.wp*0.02)) * (1+((objOpt.wp2exc||0)*0.02));
 	objDmg.pmindmg += objOpt.dmgbuff;
 	objDmg.pmindmg *= (1+objOpt.iatasa) * (1+(objOpt.imp*0.3));
 
-	objDmg.pmaxdmg += objOpt.wpmax;
-	objDmg.pmaxdmg *= (1+(objOpt.pen*0.02)) * (1+(objOpt.wp*0.02));
+	objDmg.pmaxdmg += totalWpMax + (objOpt.penLvlDmg || 0);
+	objDmg.pmaxdmg *= (1+(objOpt.pen*0.02)) * (1+(objOpt.wp*0.02)) * (1+((objOpt.wp2exc||0)*0.02));
 	objDmg.pmaxdmg += objOpt.dmgbuff;
 	objDmg.pmaxdmg *= (1+objOpt.iatasa) * (1+(objOpt.imp*0.3));
 
 	if(c == 'bk'){
-		objDmg.cbdmg += objOpt.wpmax;
+		objDmg.cbdmg += totalWpMax;
 		objDmg.cbdmg *= (1+(objOpt.pen*0.02)) * (1+(objOpt.wp*0.02));
 		objDmg.cbdmg += objOpt.dmgbuff;
 		objDmg.cbdmg *= (1+objOpt.iatasa) * (1+(objOpt.imp*0.3));
@@ -1140,6 +1276,23 @@ function refresh(e){
 	var speed   = calcSpeed(c, agi);
 	speed += calcAsa(objAsa);
 
+	// Pendant offensive options
+	var isPenSpeed = $('iSCPenSpeed') && $('iSCPenSpeed').checked;
+	var isPenLvl20 = $('iSCPenLvl20') && $('iSCPenLvl20').checked;
+	var penLvlDmg  = isPenLvl20 ? Math.floor(lvl / 20) : 0;
+	if (isPenSpeed) speed += 7;
+
+	// Two-handed & Secondary weapon mechanics
+	var is2H = $('iSC2H') && $('iSC2H').checked;
+	var offhandType = $('iSOffhandType') ? $('iSOffhandType').value : 'shield';
+	var wp2min = 0, wp2max = 0, wp2exc = 0;
+	if (!is2H && offhandType === 'weapon') {
+		var wp2minEl = $('iSWp2min'), wp2maxEl = $('iSWp2max'), wp2excEl = $('iSCWp2b');
+		if (wp2minEl && +wp2minEl.value > 0) wp2min = +wp2minEl.value;
+		if (wp2maxEl && +wp2maxEl.value > 0) wp2max = +wp2maxEl.value;
+		if (wp2excEl && wp2excEl.checked) wp2exc = 1;
+	}
+
 	var ampVal = Math.round(objAsa.iatasa * 100);
 	var absVal = Math.round(objAsa.absasa * 100);
 	var ampEl = $('oAmpAsa') || $('oAmpCapa');
@@ -1154,7 +1307,21 @@ function refresh(e){
 	var sd  = calcSD(objAttr, def, lvl);
 
 	var objDmg  = {};
-	var objOpt  = {pen:addpendant, wp:addwp, stfp:staff, imp:imp, iatasa:objAsa.iatasa, dmgbuff:dmgbuff, wpmin:wpmin, wpmax:wpmax, reset:reset};
+	var objOpt  = {
+		pen: addpendant,
+		penLvlDmg: penLvlDmg,
+		wp: addwp,
+		stfp: staff,
+		imp: imp,
+		iatasa: objAsa.iatasa,
+		dmgbuff: dmgbuff,
+		wpmin: wpmin,
+		wpmax: wpmax,
+		wp2min: wp2min,
+		wp2max: wp2max,
+		wp2exc: wp2exc,
+		reset: reset
+	};
 	calcDmg(c, objDmg, objOpt, str, agi, ene, cmd);
 
 	var objRate = {pvmdr:0, pvmar:0, pvpdr:0, pvpar:0, ppvm:ppvm, def:def};
