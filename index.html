@@ -25,7 +25,10 @@
 			</div>
 			<h2>Selecione o Servidor</h2>
 			<p>Escolha o servidor para carregar suas builds.</p>
-			<div class="provider-switch-warn">⚠️ As builds não transferem entre servidores, mas todas ficam salvas automaticamente!</div>
+			<div class="provider-switch-warn">
+				<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+				As builds não transferem entre servidores, mas todas ficam salvas automaticamente!
+			</div>
 		</div>
 
 		<div class="provider-cards-grid">
@@ -263,7 +266,7 @@
 						<label>Planejado</label>
 						<input type="number" min="0" id="iSampledmg" value="0">
 					</div>
-					<span class="sim-arrow">➔</span>
+					<span class="sim-arrow">→</span>
 					<div class="sim-output-box">
 						<label>Recebido</label>
 						<input id="oSampleResult" type="text" disabled value="0">
@@ -276,7 +279,7 @@
 						<label>Dano Recebido</label>
 						<input type="number" min="0" id="iReflectIn" value="1000" placeholder="1000" title="Dano Bruto Recebido para Calcular Reflete">
 					</div>
-					<span class="sim-arrow">➔</span>
+					<span class="sim-arrow">→</span>
 					<div class="sim-output-box">
 						<label>Refletido (<span id="oLblRefPct">0%</span>)</label>
 						<input id="oReflectOut" type="text" disabled value="0">
@@ -307,7 +310,7 @@
 
 					<!-- Row 1, Col 1: Pet -->
 					<div class="inv-slot slot-pet">
-						<div class="slot-header"><span class="slot-icon">🐾</span><span class="slot-title">Pet / Guardião</span></div>
+						<div class="slot-header"><span class="slot-title">Pet / Guardião</span></div>
 						<div class="slot-body">
 							<select id="iSTPet">
 								<option value="6">Dark Horse</option>
@@ -324,7 +327,7 @@
 
 					<!-- Row 1, Col 2: Helm -->
 					<div class="inv-slot slot-helm">
-						<div class="slot-header"><span class="slot-icon">🪖</span><span class="slot-title">Capacete</span></div>
+						<div class="slot-header"><span class="slot-title">Capacete</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
@@ -336,7 +339,7 @@
 
 					<!-- Row 1, Col 3: Wings / Cape -->
 					<div class="inv-slot slot-wings">
-						<div class="slot-header"><span class="slot-icon">🪽</span><span class="slot-title">Asas / Capa</span></div>
+						<div class="slot-header"><span class="slot-title">Asas / Capa</span></div>
 						<div class="slot-body" id="tblSpec">
 							<!-- Wings / Cape injected here by addTab -->
 						</div>
@@ -346,7 +349,6 @@
 					<div class="inv-slot slot-weap">
 						<div class="slot-header">
 							<div class="slot-header-left">
-								<span class="slot-icon">⚔️</span>
 								<span class="slot-title">Arma</span>
 							</div>
 							<label class="slot-opt-chip chip-2h" title="Arma de duas mãos (desativa o escudo/offhand)">
@@ -361,7 +363,7 @@
 
 					<!-- Row 2, Col 2: Armor -->
 					<div class="inv-slot slot-armor">
-						<div class="slot-header"><span class="slot-icon">🛡️</span><span class="slot-title">Peitoral</span></div>
+						<div class="slot-header"><span class="slot-title">Peitoral</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
@@ -374,7 +376,6 @@
 					<!-- Row 2, Col 3: Offhand (Escudo / Arma Secundária) -->
 					<div class="inv-slot slot-shield" id="slotOffhand">
 						<div class="slot-header">
-							<span class="slot-icon" id="lblOffhandIcon">🛡️</span>
 							<select id="iSOffhandType" class="select-offhand-type" onchange="toggleOffhandType(this)">
 								<option value="shield">Escudo</option>
 								<option value="weapon">Arma Secundária</option>
@@ -410,7 +411,7 @@
 
 					<!-- Row 3, Col 1: Gloves -->
 					<div class="inv-slot slot-gloves">
-						<div class="slot-header"><span class="slot-icon">🧤</span><span class="slot-title">Luvas</span></div>
+						<div class="slot-header"><span class="slot-title">Luvas</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
@@ -422,7 +423,7 @@
 
 					<!-- Row 3, Col 2: Pants -->
 					<div class="inv-slot slot-pants">
-						<div class="slot-header"><span class="slot-icon">👖</span><span class="slot-title">Calças</span></div>
+						<div class="slot-header"><span class="slot-title">Calças</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
@@ -434,7 +435,7 @@
 
 					<!-- Row 3, Col 3: Boots -->
 					<div class="inv-slot slot-boots">
-						<div class="slot-header"><span class="slot-icon">🥾</span><span class="slot-title">Botas</span></div>
+						<div class="slot-header"><span class="slot-title">Botas</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
@@ -446,7 +447,7 @@
 
 					<!-- Row 4, Col 1: Pendant -->
 					<div class="inv-slot slot-pendant">
-						<div class="slot-header"><span class="slot-icon">📿</span><span class="slot-title">Pendant</span></div>
+						<div class="slot-header"><span class="slot-title">Pendant</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-wp" title="Aumento de Dano +2%"><input type="checkbox" id="iSCPen2" onchange="refresh(event)"><span>+2%</span></label>
 							<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input type="checkbox" id="iSCPenExc" onchange="refresh(event)"><span>Exc 10%</span></label>
@@ -459,7 +460,7 @@
 
 					<!-- Row 4, Col 2: Ring 1 -->
 					<div class="inv-slot slot-ring">
-						<div class="slot-header"><span class="slot-icon">💍</span><span class="slot-title">Anel 1</span></div>
+						<div class="slot-header"><span class="slot-title">Anel 1</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
@@ -470,7 +471,7 @@
 
 					<!-- Row 4, Col 3: Ring 2 -->
 					<div class="inv-slot slot-ring">
-						<div class="slot-header"><span class="slot-icon">💍</span><span class="slot-title">Anel 2</span></div>
+						<div class="slot-header"><span class="slot-title">Anel 2</span></div>
 						<div class="slot-opts">
 							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>DIM</span></label>
 							<label class="slot-opt-chip chip-ref"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>REF</span></label>
@@ -584,7 +585,9 @@
 			<option value="5">Dark Lord</option>
 		</select>
 		<button type="button" class="btn-add-tab" onclick="addTab()" title="Adicionar novo personagem">+</button>
-		<button type="button" class="btn-delete-tab" onclick="closeTab()" title="Excluir aba ativa">🗑️</button>
+		<button type="button" class="btn-delete-tab" onclick="closeTab()" title="Excluir aba ativa">
+			<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2m-6 5v6m4-6v6"/></svg>
+		</button>
 	</div>
 </header>
 
