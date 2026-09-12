@@ -133,6 +133,7 @@ function addTab(){
 	var newTab = document.createElement('section');
 	newTab.id = newTabID;
 	newTab.setAttribute('oninput', 'refresh(event)');
+	newTab.setAttribute('onchange', 'refresh(event)');
 	newTab.innerHTML = $('model').innerHTML;
 	tabs.appendChild(newTab);
 
@@ -192,7 +193,7 @@ function addTab(){
 	}
 
 	// Prefix IDs injected by panels (skip already-prefixed ones)
-	['input','select'].forEach(function(tag){
+	['input','select','strong','span'].forEach(function(tag){
 		var els = $(newTabID).getElementsByTagName(tag);
 		for (var i = 0; i < els.length; i++) {
 			if (els[i].id && els[i].id.indexOf(newTabID) !== 0) {
@@ -226,6 +227,10 @@ function addTab(){
 
 	window.location.href = '#' + newTabID;
 	syncTabNav();
+
+	// Initial calculation for tab
+	var initEl = document.getElementById(newTabID + '_iStr');
+	if (initEl) refresh({target: initEl});
 }
 
 function calcSample(sample, def, absasa, pdimi, pddi, buffms, gangel){
@@ -633,6 +638,8 @@ function refresh(e){
 	var tasa = asaEl ? +asaEl.options[asaEl.selectedIndex].value : 0;
 	var lasaEl = $('iSLAsa'), lcapaEl = $('iSLCapa');
 	var lasa = lasaEl ? +lasaEl.value : (lcapaEl ? +lcapaEl.value : 0);
+	if (lasa < 0) lasa = 0;
+	if (lasa > 15) lasa = 15;
 	if (c === 'dl' && capaEl) { tasa = +capaEl.options[capaEl.selectedIndex].value; }
 
 	var petVal  = +$('iSTPet').options[$('iSTPet').selectedIndex].value;
@@ -680,6 +687,13 @@ function refresh(e){
 	var objAsa  = {iatasa:0, Tiatasa:0, idfasa:0, Tidfasa:0, absasa:0, Tabsasa:0, lasa:lasa, tasa:tasa};
 	var speed   = calcSpeed(c, agi);
 	speed += calcAsa(objAsa);
+
+	var ampVal = Math.round(objAsa.iatasa * 100);
+	var absVal = Math.round(objAsa.absasa * 100);
+	var ampEl = $('oAmpAsa') || $('oAmpCapa');
+	var absEl = $('oAbsAsa') || $('oAbsCapa');
+	if (ampEl) ampEl.textContent = (ampVal > 0 ? '+' : '') + ampVal + '%';
+	if (absEl) absEl.textContent = absVal + '%';
 	var hp  = calcHP(c, lvl, vit, pvida, buffgf);
 	var mp  = calcMP(c, lvl, ene);
 	var ag  = calcAG(c, objAttr);
