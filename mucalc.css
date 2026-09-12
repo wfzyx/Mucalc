@@ -192,39 +192,64 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   letter-spacing: -0.01em;
 }
 
-.provider-card-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: 16px;
-}
-
-.provider-card-specs {
-  list-style: none;
-  width: 100%;
+.provider-card-highlights {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 18px;
 }
 
-.provider-card-specs li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
-}
-
-.provider-card-specs li span {
-  color: var(--text-dim);
+.highlight-chip {
+  font-size: 11px;
   font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
 }
 
-.provider-card-specs li strong {
-  color: var(--text);
-  font-weight: 700;
+/* ── Land of Muren Card - Subtle Gold Glow ── */
+.provider-card-lom {
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 0 24px -2px rgba(245, 158, 11, 0.22), inset 0 1px 0 rgba(251, 191, 36, 0.2) !important;
+}
+
+.provider-card-lom:hover {
+  border-color: rgba(245, 158, 11, 0.8) !important;
+  box-shadow: 0 0 36px rgba(245, 158, 11, 0.45), inset 0 1px 0 rgba(251, 191, 36, 0.4) !important;
+  background: rgba(18, 17, 12, 0.95) !important;
+}
+
+.provider-card-lom .muren-badge {
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fcd34d;
+}
+
+.provider-card-lom .provider-card-title {
+  background: linear-gradient(135deg, #ffffff 0%, #fcd34d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.provider-card-lom .highlight-chip {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
+  color: #fde68a;
+}
+
+.provider-card-lom .provider-card-cta {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fcd34d;
+}
+
+.provider-card-lom:hover .provider-card-cta {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.45);
 }
 
 .provider-card-cta {
