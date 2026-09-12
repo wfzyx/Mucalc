@@ -128,144 +128,82 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 .provider-cards-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
+  max-width: 680px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 640px) {
   .provider-cards-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
 .provider-card {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  padding: 24px;
-  border-radius: 14px;
-  background: rgba(11, 16, 32, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 150px;
+  padding: 36px 28px;
+  border-radius: 16px;
+  background: rgba(11, 16, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   color: var(--text);
   font-family: inherit;
+  user-select: none;
 }
 
 .provider-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(99, 102, 241, 0.5);
-  background: rgba(16, 22, 44, 0.95);
-  box-shadow: 0 16px 40px -4px rgba(79, 70, 229, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(99, 102, 241, 0.6);
+  background: rgba(18, 24, 52, 0.95);
+  box-shadow: 0 18px 44px -4px rgba(79, 70, 229, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.provider-card-badge {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 6px;
-  margin-bottom: 12px;
-}
-
-.muca-badge {
-  background: rgba(239, 68, 68, 0.16);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  color: #fca5a5;
-}
-
-.muren-badge {
-  background: rgba(6, 182, 212, 0.16);
-  border: 1px solid rgba(6, 182, 212, 0.35);
-  color: #67e8f9;
+.provider-card:active {
+  transform: scale(0.98);
 }
 
 .provider-card-title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 800;
   color: #ffffff;
-  margin-bottom: 6px;
   letter-spacing: -0.01em;
+  pointer-events: none;
+  transition: color 0.18s ease;
 }
 
-.provider-card-highlights {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 10px 0 18px;
+.provider-card:hover .provider-card-title {
+  color: #e0e7ff;
+  text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
 }
 
-.highlight-chip {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-muted);
-}
-
-/* ── Land of Muren Card - Subtle Gold Glow ── */
+/* ── Land of Muren Card - Gold Glow ── */
 .provider-card-lom {
   border-color: rgba(245, 158, 11, 0.45) !important;
-  box-shadow: 0 0 24px -2px rgba(245, 158, 11, 0.22), inset 0 1px 0 rgba(251, 191, 36, 0.2) !important;
+  box-shadow: 0 0 28px -2px rgba(245, 158, 11, 0.24), inset 0 1px 0 rgba(251, 191, 36, 0.22) !important;
 }
 
 .provider-card-lom:hover {
-  border-color: rgba(245, 158, 11, 0.8) !important;
-  box-shadow: 0 0 36px rgba(245, 158, 11, 0.45), inset 0 1px 0 rgba(251, 191, 36, 0.4) !important;
-  background: rgba(18, 17, 12, 0.95) !important;
-}
-
-.provider-card-lom .muren-badge {
-  background: rgba(245, 158, 11, 0.16);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.85) !important;
+  box-shadow: 0 0 44px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(251, 191, 36, 0.5) !important;
+  background: rgba(20, 18, 10, 0.95) !important;
 }
 
 .provider-card-lom .provider-card-title {
-  background: linear-gradient(135deg, #ffffff 0%, #fcd34d 100%);
+  background: linear-gradient(135deg, #ffffff 10%, #fcd34d 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.provider-card-lom .highlight-chip {
-  background: rgba(245, 158, 11, 0.08);
-  border-color: rgba(245, 158, 11, 0.25);
-  color: #fde68a;
-}
-
-.provider-card-lom .provider-card-cta {
-  background: rgba(245, 158, 11, 0.12);
-  border-color: rgba(245, 158, 11, 0.3);
-  color: #fcd34d;
-}
-
-.provider-card-lom:hover .provider-card-cta {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-  border-color: rgba(251, 191, 36, 0.4);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.45);
-}
-
-.provider-card-cta {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 13px;
-  font-weight: 700;
-  color: #c7d2fe;
-  transition: all 0.2s ease;
-  margin-top: auto;
+.provider-card-lom:hover .provider-card-title {
+  text-shadow: 0 0 24px rgba(245, 158, 11, 0.6);
 }
 
 .provider-card:hover .provider-card-cta {
