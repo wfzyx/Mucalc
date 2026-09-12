@@ -3,9 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="theme-color" content="#0d0f1a" />
-	<meta name="description" content="MU Online Character Calculator">
-	<title>MU Calc</title>
+	<meta name="theme-color" content="#060810" />
+	<meta name="description" content="MU Online Character & Build Calculator">
+	<title>MU Calc — Build Studio</title>
 	<link rel="manifest" href="manifest.json">
 	<link rel="apple-touch-icon" href="folklore.png">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,12 +16,63 @@
 </head>
 <body>
 
+<!-- ── FULLSCREEN PROVIDER SELECTION OVERLAY (Single use per session) ── -->
+<div id="providerOverlay" class="provider-modal-backdrop" style="display:none;">
+	<div class="provider-modal-content">
+		<div class="provider-modal-header">
+			<div class="provider-modal-logo">
+				<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+			</div>
+			<h2>Selecione o Servidor</h2>
+			<p>Escolha o servidor para carregar limites de resets, salas de dificuldade e regras desta sessão.</p>
+		</div>
+
+		<div class="provider-cards-grid">
+			<!-- MUCABrasil Card -->
+			<button type="button" class="provider-card" onclick="chooseSessionProvider('mucabrasil')">
+				<div class="provider-card-badge muca-badge">500 Resets • Hardcore 97d</div>
+				<h3 class="provider-card-title">MUCABrasil</h3>
+				<p class="provider-card-desc">Servidor brasileiro tradicional com 500 resets, atributos até 32.500, liderança DL calculada e bônus de pontos VIP.</p>
+				<ul class="provider-card-specs">
+					<li><span>Resets Máximos:</span> <strong>500</strong></li>
+					<li><span>Limite Atributos:</span> <strong>32.500</strong></li>
+					<li><span>Liderança DL:</span> <strong>Resets × 130</strong></li>
+					<li><span>Asas Lvl 2:</span> <strong>45%/51% (+13) • 47%/55% (+15)</strong></li>
+					<li><span>Bônus VIP:</span> <strong>Ativo (+60/+76 pts/reset)</strong></li>
+				</ul>
+				<div class="provider-card-cta">
+					<span>Entrar no MUCABrasil</span>
+					<span class="cta-arrow">➔</span>
+				</div>
+			</button>
+
+			<!-- Land of Muren Card -->
+			<button type="button" class="provider-card" onclick="chooseSessionProvider('muren')">
+				<div class="provider-card-badge muren-badge">100 Resets • Sharded Realms</div>
+				<h3 class="provider-card-title">Land of Muren</h3>
+				<p class="provider-card-desc">Progressão sharded por 3 salas de dificuldade com multiplicadores de pontos por nível (1x, 2x, 4x) e fórmula dinâmica.</p>
+				<ul class="provider-card-specs">
+					<li><span>Resets Máximos:</span> <strong>100</strong></li>
+					<li><span>Salas de Dificuldade:</span> <strong>Muren (1x), Nightmare (2x), Hell (4x)</strong></li>
+					<li><span>Limite Atributos:</span> <strong>50.000</strong></li>
+					<li><span>Liderança DL:</span> <strong>Atributo Alocável (até 50k)</strong></li>
+					<li><span>Recompensa Resets:</span> <strong>Escalar por Fórmula do Servidor</strong></li>
+				</ul>
+				<div class="provider-card-cta">
+					<span>Entrar em Land of Muren</span>
+					<span class="cta-arrow">➔</span>
+				</div>
+			</button>
+		</div>
+	</div>
+</div>
+
 <!-- ── TEMPLATES (hidden) ── -->
 <div style="display:none">
 
-	<!-- Liderança (DL only) — auto-calculated: resets × 130 -->
+	<!-- Liderança (DL only) -->
 	<div id="pnlLid">
-		<div class="form-row">
+		<div class="stat-box stat-box-wide">
 			<label>Liderança</label>
 			<input value="0" id="iCmd" type="text" disabled>
 		</div>
@@ -29,64 +80,53 @@
 
 	<!-- Physical Weapon -->
 	<div id="pnlArma">
-		<div class="sub-group-title">Arma Física</div>
-		<div class="form-row">
-			<label>Dano Mínimo</label>
-			<input value="0" min="0" id="iSWpmin" type="number">
-		</div>
-		<div class="form-row">
-			<label>Dano Máximo</label>
-			<input value="0" min="0" id="iSWpmax" type="number">
-		</div>
-		<div class="check-row">
-			<label class="check-label"><input id="iSCWp2" type="checkbox"/>+2%</label>
+		<div class="slot-weap-row">
+			<input value="0" min="0" id="iSWpmin" type="number" placeholder="Mín" title="Dano Físico Mínimo">
+			<span class="weap-dash">-</span>
+			<input value="0" min="0" id="iSWpmax" type="number" placeholder="Máx" title="Dano Físico Máximo">
+			<label class="slot-opt-chip chip-wp"><input id="iSCWp2" type="checkbox"/><span>+2%</span></label>
 		</div>
 	</div>
 
 	<!-- Staff (magical weapon) -->
 	<div id="pnlStaff">
-		<div class="sub-group-title">Staff</div>
-		<div class="form-row">
-			<label>Dano Mágico (%)</label>
-			<input value="0" min="0" id="iSStaff" type="number">
-		</div>
-		<div class="check-row">
-			<label class="check-label"><input id="iSCStaff2" type="checkbox"/>+2%</label>
+		<div class="slot-weap-row">
+			<input value="0" min="0" id="iSStaff" type="number" placeholder="%" title="Dano Mágico (%)">
+			<span class="weap-unit">%</span>
+			<label class="slot-opt-chip chip-wp"><input id="iSCStaff2" type="checkbox"/><span>+2%</span></label>
 		</div>
 	</div>
 
 	<!-- Wings (Asa) -->
 	<div id="pnlAsa">
-		<div class="form-row">
-			<label>Asa</label>
+		<div class="slot-wing-row">
 			<select id="iSTAsa">
 				<option value="2">Lvl 2</option>
 				<option value="1">Lvl 1</option>
 				<option value="0" selected>N/A</option>
 			</select>
-			<span style="color:var(--text-muted)">+</span>
-			<input value="0" id="iSLAsa" min="0" max="15" type="number" style="width:50px">
-			<div class="wing-stats">
-				<span class="wing-badge wing-badge-amp" title="Dano Amplificado">Amp <strong id="oAmpAsa">0%</strong></span>
-				<span class="wing-badge wing-badge-abs" title="Dano Absorvido">Abs <strong id="oAbsAsa">0%</strong></span>
-			</div>
+			<span class="plus-sep">+</span>
+			<input value="0" id="iSLAsa" min="0" max="15" type="number" style="width:38px">
+		</div>
+		<div class="wing-stats">
+			<span class="wing-badge wing-badge-amp" title="Dano Amplificado">Amp <strong id="oAmpAsa">0%</strong></span>
+			<span class="wing-badge wing-badge-abs" title="Dano Absorvido">Abs <strong id="oAbsAsa">0%</strong></span>
 		</div>
 	</div>
 
 	<!-- Cape (DL only) -->
 	<div id="pnlCapa">
-		<div class="form-row">
-			<label>Capa</label>
+		<div class="slot-wing-row">
 			<select id="iSTCapa">
 				<option value="2">Sim</option>
 				<option value="0">N/A</option>
 			</select>
-			<span style="color:var(--text-muted)">+</span>
-			<input value="0" id="iSLCapa" min="0" max="15" type="number" style="width:50px">
-			<div class="wing-stats">
-				<span class="wing-badge wing-badge-amp" title="Dano Amplificado">Amp <strong id="oAmpCapa">0%</strong></span>
-				<span class="wing-badge wing-badge-abs" title="Dano Absorvido">Abs <strong id="oAbsCapa">0%</strong></span>
-			</div>
+			<span class="plus-sep">+</span>
+			<input value="0" id="iSLCapa" min="0" max="15" type="number" style="width:38px">
+		</div>
+		<div class="wing-stats">
+			<span class="wing-badge wing-badge-amp" title="Dano Amplificado">Amp <strong id="oAmpCapa">0%</strong></span>
+			<span class="wing-badge wing-badge-abs" title="Dano Absorvido">Abs <strong id="oAbsCapa">0%</strong></span>
 		</div>
 	</div>
 
@@ -113,7 +153,7 @@
 	<!-- Combo (BK) -->
 	<div id="pnlDanoCombo">
 		<div class="dmg-single">
-			<label>Combo</label>
+			<label>Dano Combo</label>
 			<input id="oCBDmg" type="text" disabled />
 		</div>
 	</div>
@@ -130,10 +170,10 @@
 
 	<!-- ME self buff selector -->
 	<div id="pnlSelf">
-		<div class="form-row">
-			<label>Buff Próprio</label>
+		<div class="form-row-compact" style="margin-top:4px">
+			<label>Buff ME Próprio</label>
 			<select id="iSTBuff">
-				<option value="2">Full (32500)</option>
+				<option value="2">Full</option>
 				<option value="1">Próprio</option>
 				<option value="0" selected>N/A</option>
 			</select>
@@ -142,12 +182,12 @@
 
 	<!-- External ME buff checkbox -->
 	<div id="pnlBuff">
-		<label class="check-label"><input id="iSCME" type="checkbox"/>Buff ME Full (32500 ENE)</label>
+		<label class="check-label"><input id="iSCME" type="checkbox"/>Buff ME Full</label>
 	</div>
 
 	<!-- ME Buff Output -->
 	<div id="pnlBuffME">
-		<div class="sub-group-title">Buff ME</div>
+		<div class="sub-group-title">Buff Próprio ME</div>
 		<div class="dmg-grid">
 			<div class="dmg-cell"><span>Dano</span><input id="oBuffRed" type="text" disabled /></div>
 			<div class="dmg-cell"><span>Defesa</span><input id="oBuffGreen" type="text" disabled /></div>
@@ -163,10 +203,10 @@
 <section id="model">
 	<div class="tab-content cockpit-grid">
 
-		<!-- COLUMN 1: PROGRESSION & ATTRIBUTES -->
+		<!-- COLUMN 1: PROGRESSION & STATS -->
 		<div class="pane-col">
 
-			<!-- Pontos Compact Hero -->
+			<!-- Pontos Compact Hero Banner -->
 			<div class="card card-points-compact">
 				<div class="points-compact-row">
 					<div class="points-compact-meta">
@@ -177,7 +217,7 @@
 				</div>
 			</div>
 
-			<!-- Character Stats -->
+			<!-- Character Progression Card -->
 			<div class="card">
 				<h3>Personagem</h3>
 				<div class="realm-badge-row" id="pnlRealmInfo" style="display:none;">
@@ -216,67 +256,191 @@
 				</div>
 			</div>
 
-		</div><!-- end col 1 -->
-
-		<!-- COLUMN 2: GEAR & MODIFIERS -->
-		<div class="pane-col">
-
-			<!-- Equipment -->
-			<div class="card">
-				<h3>Equipamento</h3>
-				<div id="tblArma"><!-- weapon panels injected --></div>
-				<div id="tblSpec">
-					<div class="sub-group">
-						<div class="sub-group-title">Pendant</div>
-						<div class="check-row compact-checks">
-							<label class="check-label"><input id="iSCPen2" type="checkbox"/>Dano Excelente +2%</label>
-						</div>
-					</div>
-					<!-- Wings / Cape injected here -->
-				</div>
-				<div class="sub-group">
-					<div class="form-row-compact">
-						<label>Pet</label>
-						<select id="iSTPet">
-							<option value="6">Horse</option>
-							<option value="5">Azul</option>
-							<option value="4">Preto</option>
-							<option value="3">Fenrir</option>
-							<option value="3">Dino</option>
-							<option value="2">Imp</option>
-							<option value="1">Angel</option>
-							<option value="0" selected>N/A</option>
-						</select>
-					</div>
-				</div>
-				<div class="sub-group">
-					<div class="sub-group-title">Opções do Set</div>
-					<div class="grid-3col">
-						<div class="form-item"><label>Vida +4</label><input value="0" id="iSVida" min="0" max="8" type="number"></div>
-						<div class="form-item"><label>Dim +4</label><input value="0" id="iSDiminui" min="0" max="8" type="number"></div>
-						<div class="form-item"><label>DDI +7</label><input value="0" id="iSDDI" min="0" max="6" type="number"></div>
-						<div class="form-item"><label>Life +16</label><input value="0" id="iSDeze" min="0" max="5" type="number"></div>
-						<div class="form-item"><label>PvM +5</label><input value="0" id="iSPvm" min="0" max="8" type="number"></div>
-						<div class="form-item"><label>Nível Set</label>
-							<select id="iSSet">
-								<option value="20">+13</option>
-								<option value="15">+12</option>
-								<option value="10">+11</option>
-								<option value="5">+10</option>
-								<option selected value="0">+0~9</option>
-							</select>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Buffs -->
+			<!-- Buffs Card -->
 			<div class="card">
 				<h3>Buffs</h3>
 				<div class="check-row compact-checks" id="tblBuffs">
 					<label class="check-label"><input id="iSCMS" type="checkbox"/>MS Full (70%)</label>
 					<label class="check-label"><input id="iSCGF" type="checkbox"/>GF Full (135%)</label>
-					<!-- class-specific buffs injected -->
+					<!-- class-specific buffs injected here -->
+				</div>
+			</div>
+
+		</div><!-- end col 1 -->
+
+		<!-- COLUMN 2: VISUAL INVENTORY & GEAR -->
+		<div class="pane-col">
+
+			<div class="card card-inventory">
+				<div class="inv-header-bar">
+					<h3>Inventário de Equipamento</h3>
+					<div class="inv-actions">
+						<button type="button" class="inv-btn-quick" onclick="applySetPreset(this, 'full')" title="Equipar todas as opções em todas as peças">⚡ Set Full</button>
+						<button type="button" class="inv-btn-quick" onclick="applySetPreset(this, 'clear')" title="Desmarcar todas as opções">Limpar</button>
+					</div>
+				</div>
+
+				<!-- MU Equipment Paperdoll Grid -->
+				<div class="inv-paperdoll-grid">
+
+					<!-- Slot Pet -->
+					<div class="inv-slot slot-pet">
+						<div class="slot-header"><span class="slot-icon">🐾</span><span class="slot-title">Pet / Guardião</span></div>
+						<div class="slot-body">
+							<select id="iSTPet">
+								<option value="6">Dark Horse</option>
+								<option value="5">Fenrir Azul</option>
+								<option value="4">Fenrir Preto</option>
+								<option value="3">Fenrir Vermelho</option>
+								<option value="3">Dinorant</option>
+								<option value="2">Satan / Imp</option>
+								<option value="1">Guardian Angel</option>
+								<option value="0" selected>N/A</option>
+							</select>
+						</div>
+					</div>
+
+					<!-- Slot Helm -->
+					<div class="inv-slot slot-helm">
+						<div class="slot-header"><span class="slot-icon">🪖</span><span class="slot-title">Capacete</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+							<label class="slot-opt-chip chip-ddi"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
+							<label class="slot-opt-chip chip-deze"><input type="checkbox" class="opt-deze" onchange="syncInventoryOpts(this)"><span>+16</span></label>
+							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PvM</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Wings / Cape -->
+					<div class="inv-slot slot-wings">
+						<div class="slot-header"><span class="slot-icon">🪽</span><span class="slot-title">Asas / Capa</span></div>
+						<div class="slot-body" id="tblSpec">
+							<!-- Wings / Cape injected here by addTab -->
+						</div>
+					</div>
+
+					<!-- Slot Weapon 1 (Arma / Staff) -->
+					<div class="inv-slot slot-weap">
+						<div class="slot-header"><span class="slot-icon">⚔️</span><span class="slot-title">Arma Principal</span></div>
+						<div class="slot-body" id="tblArma">
+							<!-- weapon panel injected here -->
+						</div>
+					</div>
+
+					<!-- Slot Armor -->
+					<div class="inv-slot slot-armor">
+						<div class="slot-header"><span class="slot-icon">🛡️</span><span class="slot-title">Peitoral</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+							<label class="slot-opt-chip chip-ddi"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
+							<label class="slot-opt-chip chip-deze"><input type="checkbox" class="opt-deze" onchange="syncInventoryOpts(this)"><span>+16</span></label>
+							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PvM</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Pendant -->
+					<div class="inv-slot slot-pendant">
+						<div class="slot-header"><span class="slot-icon">📿</span><span class="slot-title">Pendant</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-wp"><input type="checkbox" id="iSCPen2"><span>Exc +2%</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Shield / Offhand -->
+					<div class="inv-slot slot-shield">
+						<div class="slot-header"><span class="slot-icon">🛡️</span><span class="slot-title">Escudo / Offhand</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+							<label class="slot-opt-chip chip-ddi"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
+							<label class="slot-opt-chip chip-deze"><input type="checkbox" class="opt-deze" onchange="syncInventoryOpts(this)"><span>+16</span></label>
+							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PvM</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Pants -->
+					<div class="inv-slot slot-pants">
+						<div class="slot-header"><span class="slot-icon">👖</span><span class="slot-title">Calças</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+							<label class="slot-opt-chip chip-ddi"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
+							<label class="slot-opt-chip chip-deze"><input type="checkbox" class="opt-deze" onchange="syncInventoryOpts(this)"><span>+16</span></label>
+							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PvM</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Ring 1 -->
+					<div class="inv-slot slot-ring">
+						<div class="slot-header"><span class="slot-icon">💍</span><span class="slot-title">Anel 1</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Gloves -->
+					<div class="inv-slot slot-gloves">
+						<div class="slot-header"><span class="slot-icon">🧤</span><span class="slot-title">Luvas</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+							<label class="slot-opt-chip chip-ddi"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
+							<label class="slot-opt-chip chip-deze"><input type="checkbox" class="opt-deze" onchange="syncInventoryOpts(this)"><span>+16</span></label>
+							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PvM</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Boots -->
+					<div class="inv-slot slot-boots">
+						<div class="slot-header"><span class="slot-icon">🥾</span><span class="slot-title">Botas</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+							<label class="slot-opt-chip chip-ddi"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
+							<label class="slot-opt-chip chip-deze"><input type="checkbox" class="opt-deze" onchange="syncInventoryOpts(this)"><span>+16</span></label>
+							<label class="slot-opt-chip chip-pvm"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>PvM</span></label>
+						</div>
+					</div>
+
+					<!-- Slot Ring 2 -->
+					<div class="inv-slot slot-ring">
+						<div class="slot-header"><span class="slot-icon">💍</span><span class="slot-title">Anel 2</span></div>
+						<div class="slot-opts">
+							<label class="slot-opt-chip chip-dim"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+							<label class="slot-opt-chip chip-vida"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+						</div>
+					</div>
+
+				</div><!-- end paperdoll grid -->
+
+				<!-- Set Level & Options Summary Bar -->
+				<div class="inv-summary-bar">
+					<div class="set-lvl-picker">
+						<label>Nível Set</label>
+						<select id="iSSet">
+							<option value="20" selected>+13</option>
+							<option value="15">+12</option>
+							<option value="10">+11</option>
+							<option value="5">+10</option>
+							<option value="0">+0~9</option>
+						</select>
+					</div>
+					<div class="inv-opt-tallies">
+						<span class="tally-item" title="Diminui Dano 4%">Dim: <strong id="sumDim">0</strong></span>
+						<span class="tally-item" title="Vida 4%">Vida: <strong id="sumVida">0</strong></span>
+						<span class="tally-item" title="DDI 7%">DDI: <strong id="sumDDI">0</strong></span>
+						<span class="tally-item" title="Adicional Defesa +16">+16: <strong id="sumDeze">0</strong></span>
+						<span class="tally-item" title="PvM +5">PvM: <strong id="sumPvm">0</strong></span>
+					</div>
+					<!-- Hidden values read by calculations -->
+					<input type="hidden" id="iSVida" value="0">
+					<input type="hidden" id="iSDiminui" value="0">
+					<input type="hidden" id="iSDDI" value="0">
+					<input type="hidden" id="iSDeze" value="0">
+					<input type="hidden" id="iSPvm" value="0">
 				</div>
 			</div>
 
@@ -349,11 +513,15 @@
 			<span class="brand-badge">STUDIO</span>
 		</div>
 	</div>
+
 	<div class="header-actions">
-		<div class="provider-switch">
-			<button type="button" class="provider-btn active" id="btnProvMuca" onclick="setProvider('mucabrasil')">MUCABrasil</button>
-			<button type="button" class="provider-btn" id="btnProvMuren" onclick="setProvider('muren')">Land of Muren</button>
-		</div>
+		<!-- Current Server Pill (Click to open overlay) -->
+		<button type="button" class="current-server-pill" onclick="openProviderOverlay()" title="Clique para trocar de servidor">
+			<span class="server-indicator-dot"></span>
+			<span id="lblCurrentServer">MUCABrasil</span>
+			<span class="server-change-hint">Trocar</span>
+		</button>
+
 		<select id="classes">
 			<option value="1">BK — Blade Knight</option>
 			<option value="2">SM — Soul Master</option>
@@ -385,12 +553,12 @@ function syncTabNav() {
   links.forEach(function(a) {
     a.classList.toggle('active', a.getAttribute('href') === hash);
   });
-  // Default: first tab active when no hash
   if (!hash && links.length > 0) links[0].classList.add('active');
 }
 window.addEventListener('hashchange', syncTabNav);
+
 window.addEventListener('DOMContentLoaded', function() {
-  updateProviderUI();
+  initProviderSession();
   var tabsContainer = document.getElementById('tabs');
   if (tabsContainer && tabsContainer.children.length === 0) {
     addTab();

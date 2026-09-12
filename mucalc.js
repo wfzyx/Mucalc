@@ -1,14 +1,36 @@
 var $ = function( id ) { return document.getElementById( id ); };
 
-window.currentProvider = localStorage.getItem('mucalc_provider') || 'mucabrasil';
+window.currentProvider = sessionStorage.getItem('mucalc_session_provider') || localStorage.getItem('mucalc_provider') || 'mucabrasil';
 
 function getProvider() {
 	return window.currentProvider || 'mucabrasil';
 }
 
-function setProvider(prov) {
+function initProviderSession() {
+	var sessionProv = sessionStorage.getItem('mucalc_session_provider');
+	if (!sessionProv) {
+		openProviderOverlay();
+	} else {
+		window.currentProvider = sessionProv;
+		updateProviderUI();
+	}
+}
+
+function openProviderOverlay() {
+	var overlay = document.getElementById('providerOverlay');
+	if (overlay) overlay.style.display = 'flex';
+}
+
+function closeProviderOverlay() {
+	var overlay = document.getElementById('providerOverlay');
+	if (overlay) overlay.style.display = 'none';
+}
+
+function chooseSessionProvider(prov) {
 	window.currentProvider = prov;
+	sessionStorage.setItem('mucalc_session_provider', prov);
 	localStorage.setItem('mucalc_provider', prov);
+	closeProviderOverlay();
 	updateProviderUI();
 
 	// Refresh all open tabs
@@ -25,12 +47,16 @@ function setProvider(prov) {
 	}
 }
 
+function setProvider(prov) {
+	chooseSessionProvider(prov);
+}
+
 function updateProviderUI() {
 	var prov = getProvider();
-	var btnMuca = document.getElementById('btnProvMuca');
-	var btnMuren = document.getElementById('btnProvMuren');
-	if (btnMuca) btnMuca.classList.toggle('active', prov === 'mucabrasil');
-	if (btnMuren) btnMuren.classList.toggle('active', prov === 'muren');
+	var lblServer = document.getElementById('lblCurrentServer');
+	if (lblServer) {
+		lblServer.textContent = prov === 'muren' ? 'Land of Muren' : 'MUCABrasil';
+	}
 
 	var tabs = document.getElementById('tabs');
 	if (tabs) {
@@ -77,6 +103,65 @@ function applyProviderToTab(tabId, prov) {
 			cmdEl.disabled = true;
 			cmdEl.type = 'text';
 		}
+	}
+}
+
+function syncInventoryOpts(el) {
+	var section = el.closest ? el.closest('section') : (function() {
+		var node = el;
+		while (node && node.tagName !== 'SECTION') node = node.parentNode;
+		return node;
+	})();
+	if (!section) return;
+	var tabId = section.id;
+	var p = tabId + '_';
+
+	var vCount = section.querySelectorAll('.opt-vida:checked').length;
+	var dimCount = section.querySelectorAll('.opt-dim:checked').length;
+	var ddiCount = section.querySelectorAll('.opt-ddi:checked').length;
+	var dezeCount = section.querySelectorAll('.opt-deze:checked').length;
+	var pvmCount = section.querySelectorAll('.opt-pvm:checked').length;
+
+	var elVida = document.getElementById(p + 'iSVida');
+	var elDim = document.getElementById(p + 'iSDiminui');
+	var elDDI = document.getElementById(p + 'iSDDI');
+	var elDeze = document.getElementById(p + 'iSDeze');
+	var elPvm = document.getElementById(p + 'iSPvm');
+
+	if (elVida) elVida.value = vCount;
+	if (elDim) elDim.value = dimCount;
+	if (elDDI) elDDI.value = ddiCount;
+	if (elDeze) elDeze.value = dezeCount;
+	if (elPvm) elPvm.value = pvmCount;
+
+	var sDim = document.getElementById(p + 'sumDim');
+	var sVida = document.getElementById(p + 'sumVida');
+	var sDDI = document.getElementById(p + 'sumDDI');
+	var sDeze = document.getElementById(p + 'sumDeze');
+	var sPvm = document.getElementById(p + 'sumPvm');
+	if (sDim) sDim.textContent = dimCount;
+	if (sVida) sVida.textContent = vCount;
+	if (sDDI) sDDI.textContent = ddiCount;
+	if (sDeze) sDeze.textContent = dezeCount;
+	if (sPvm) sPvm.textContent = pvmCount;
+
+	// Trigger calculation refresh
+	refresh({ target: elVida || el });
+}
+
+function applySetPreset(btn, preset) {
+	var section = btn.closest ? btn.closest('section') : (function() {
+		var node = btn;
+		while (node && node.tagName !== 'SECTION') node = node.parentNode;
+		return node;
+	})();
+	if (!section) return;
+	var checkboxes = section.querySelectorAll('.slot-opt-chip input[type="checkbox"]');
+	for (var i = 0; i < checkboxes.length; i++) {
+		checkboxes[i].checked = (preset === 'full');
+	}
+	if (checkboxes.length > 0) {
+		syncInventoryOpts(checkboxes[0]);
 	}
 }
 
@@ -275,8 +360,8 @@ function addTab(){
 	if (!cls) { alert('Classe não implementada'); tabs.removeChild(newTab); return; }
 	$(newTabID).classList.add(cls);
 
-	// Prefix all IDs inside the new tab (divs first, then inputs/selects/labels/spans)
-	['div','input','select','label','span'].forEach(function(tag){
+	// Prefix all IDs inside the new tab (divs first, then inputs/selects/labels/spans/strongs)
+	['div','input','select','label','span','strong'].forEach(function(tag){
 		var els = $(newTabID).getElementsByTagName(tag);
 		for (var i = 0; i < els.length; i++) {
 			if (els[i].id) els[i].id = newTabID + '_' + els[i].id;
@@ -363,9 +448,14 @@ function addTab(){
 	window.location.href = '#' + newTabID;
 	syncTabNav();
 
-	// Initial calculation for tab
-	var initEl = document.getElementById(newTabID + '_iStr');
-	if (initEl) refresh({target: initEl});
+	// Pre-apply full set options on newly added tab for instant complete telemetry
+	var fullBtn = $(newTabID).querySelector('.inv-btn-quick');
+	if (fullBtn) {
+		applySetPreset(fullBtn, 'full');
+	} else {
+		var initEl = document.getElementById(newTabID + '_iStr');
+		if (initEl) refresh({target: initEl});
+	}
 }
 
 function calcSample(sample, def, absasa, pdimi, pddi, buffms, gangel){
