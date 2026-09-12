@@ -135,6 +135,43 @@ input, select, .points-hero input, .dmg-cell input {
   gap: 10px;
 }
 
+/* ── Provider Switch Toggle ── */
+.provider-switch {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.provider-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.provider-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.provider-btn.active {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.45);
+  color: #c7d2fe;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+}
+
 .header-actions select {
   padding: 8px 14px;
   border-radius: 8px;
@@ -295,6 +332,52 @@ article.tabs section:target { display: block; }
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 8px var(--accent);
+}
+
+/* ── Realm / Difficulty Badges (Land of Muren) ── */
+.realm-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+}
+
+.realm-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.realm-badge.realm-muren {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  color: #67e8f9;
+}
+
+.realm-badge.realm-nightmare {
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  color: #d8b4fe;
+}
+
+.realm-badge.realm-hell {
+  background: rgba(249, 115, 22, 0.15);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  color: #fdba74;
+}
+
+.realm-req {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
 /* ── Form rows ── */

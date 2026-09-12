@@ -169,10 +169,14 @@
 			<!-- Char Stats -->
 			<div class="card">
 				<h3>Personagem</h3>
+				<div class="realm-badge-row" id="pnlRealmInfo" style="display:none;">
+					<span class="realm-badge realm-muren" id="oRealmBadge">Muren (1x)</span>
+					<span class="realm-req" id="oRealmReq">Req: Nv 300</span>
+				</div>
 				<div class="form-row">
 					<label>Resets</label>
 					<input id="iResets" value="0" min="0" max="500" type="number">
-					<label class="check-label" style="margin-left:6px"><input id="iSCVip" type="checkbox"/>VIP</label>
+					<label class="check-label" id="lblVip" style="margin-left:6px"><input id="iSCVip" type="checkbox"/>VIP</label>
 				</div>
 				<div class="form-row">
 					<label>Level</label>
@@ -345,6 +349,10 @@
 		</div>
 	</div>
 	<div class="header-actions">
+		<div class="provider-switch">
+			<button type="button" class="provider-btn active" id="btnProvMuca" onclick="setProvider('mucabrasil')">MUCABrasil</button>
+			<button type="button" class="provider-btn" id="btnProvMuren" onclick="setProvider('muren')">Land of Muren</button>
+		</div>
 		<select id="classes">
 			<option value="1">BK — Blade Knight</option>
 			<option value="2">SM — Soul Master</option>
@@ -381,6 +389,7 @@ function syncTabNav() {
 }
 window.addEventListener('hashchange', syncTabNav);
 window.addEventListener('DOMContentLoaded', function() {
+  updateProviderUI();
   var tabsContainer = document.getElementById('tabs');
   if (tabsContainer && tabsContainer.children.length === 0) {
     addTab();

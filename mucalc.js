@@ -1,19 +1,151 @@
 var $ = function( id ) { return document.getElementById( id ); };
 
+window.currentProvider = localStorage.getItem('mucalc_provider') || 'mucabrasil';
+
+function getProvider() {
+	return window.currentProvider || 'mucabrasil';
+}
+
+function setProvider(prov) {
+	window.currentProvider = prov;
+	localStorage.setItem('mucalc_provider', prov);
+	updateProviderUI();
+
+	// Refresh all open tabs
+	var tabs = document.getElementById('tabs');
+	if (tabs) {
+		var sections = tabs.getElementsByTagName('section');
+		for (var i = 0; i < sections.length; i++) {
+			var sec = sections[i];
+			var firstInput = sec.querySelector('input[id$="_iStr"]');
+			if (firstInput) {
+				refresh({ target: firstInput });
+			}
+		}
+	}
+}
+
+function updateProviderUI() {
+	var prov = getProvider();
+	var btnMuca = document.getElementById('btnProvMuca');
+	var btnMuren = document.getElementById('btnProvMuren');
+	if (btnMuca) btnMuca.classList.toggle('active', prov === 'mucabrasil');
+	if (btnMuren) btnMuren.classList.toggle('active', prov === 'muren');
+
+	var tabs = document.getElementById('tabs');
+	if (tabs) {
+		var sections = tabs.getElementsByTagName('section');
+		for (var i = 0; i < sections.length; i++) {
+			applyProviderToTab(sections[i].id, prov);
+		}
+	}
+}
+
+function applyProviderToTab(tabId, prov) {
+	var isMuren = prov === 'muren';
+	var p = tabId + '_';
+	var resetEl = document.getElementById(p + 'iResets');
+	if (resetEl) {
+		resetEl.max = isMuren ? 100 : 500;
+		if (isMuren && +resetEl.value > 100) resetEl.value = 100;
+	}
+	var maxStat = isMuren ? 50000 : 32500;
+	['iStr', 'iAgi', 'iVit', 'iEne'].forEach(function(s) {
+		var el = document.getElementById(p + s);
+		if (el) {
+			el.max = maxStat;
+			if (!isMuren && +el.value > 32500) el.value = 32500;
+		}
+	});
+	var vipRow = document.getElementById(p + 'lblVip');
+	if (vipRow) {
+		vipRow.style.display = isMuren ? 'none' : 'inline-flex';
+	}
+	var realmRow = document.getElementById(p + 'pnlRealmInfo');
+	if (realmRow) {
+		realmRow.style.display = isMuren ? 'flex' : 'none';
+	}
+	var cmdEl = document.getElementById(p + 'iCmd');
+	if (cmdEl) {
+		if (isMuren) {
+			cmdEl.disabled = false;
+			cmdEl.type = 'number';
+			cmdEl.min = '25';
+			cmdEl.max = '50000';
+			if (!cmdEl.value || +cmdEl.value === 0) cmdEl.value = 25;
+		} else {
+			cmdEl.disabled = true;
+			cmdEl.type = 'text';
+		}
+	}
+}
+
+function getMurenRoom(resets) {
+	if (resets < 20) {
+		return { id: 'muren', name: 'Muren', mult: 1, resetLvl: 300 };
+	} else if (resets < 70) {
+		return { id: 'nightmare', name: 'Nightmare', mult: 2, resetLvl: 350 };
+	} else {
+		return { id: 'hell', name: 'Hell', mult: 4, resetLvl: 400 };
+	}
+}
+
+function calcPontosMuren(c, reset, lvl, str, agi, vit, ene, cmd, hasMarlon, questBonusPoints) {
+	var basePoints = (c === 'mg' || c === 'dl') ? 7 : 5;
+	var resetReward = 0;
+	if (reset > 0) {
+		var rawTotal = reset * (1055 - 5 * reset);
+		resetReward = Math.floor((basePoints * rawTotal) / 14);
+	}
+	var room = getMurenRoom(reset);
+	var questPerLvlBonus = hasMarlon ? 1 : 0;
+	var pointsPerLvl = Math.round((basePoints + questPerLvlBonus) * room.mult);
+	var levelPoints = Math.max(0, lvl - 1) * pointsPerLvl;
+	var scaledQuestReward = Math.round(questBonusPoints * room.mult);
+	var totalAvailable = resetReward + levelPoints + scaledQuestReward;
+
+	var startStats = {
+		bk: {str:28, agi:20, vit:25, ene:10, cmd:0},
+		sm: {str:18, agi:18, vit:15, ene:30, cmd:0},
+		me: {str:22, agi:25, vit:20, ene:15, cmd:0},
+		mg: {str:26, agi:26, vit:26, ene:16, cmd:0},
+		dl: {str:26, agi:20, vit:20, ene:15, cmd:25},
+	};
+	var base = startStats[c] || {str:0, agi:0, vit:0, ene:0, cmd:0};
+	var spent = (str - base.str) + (agi - base.agi) + (vit - base.vit) + (ene - base.ene);
+	if (c === 'dl') {
+		spent += (cmd - base.cmd);
+	}
+
+	return {
+		pontos: totalAvailable - spent,
+		room: room,
+		resetReward: resetReward,
+		pointsPerLvl: pointsPerLvl
+	};
+}
+
 function sanitycheck(prefix){
 	var $ = function( id ) { return document.getElementById( prefix + id ); };
 	var flag = true;
+	var isMuren = getProvider() === 'muren';
+	var maxStat = isMuren ? 50000 : 32500;
+	var maxResets = isMuren ? 100 : 500;
 
 	var checks = [
-		['iStr',    0, 32500],
-		['iAgi',    0, 32500],
-		['iVit',    0, 32500],
-		['iEne',    0, 32500],
+		['iStr',    0, maxStat],
+		['iAgi',    0, maxStat],
+		['iVit',    0, maxStat],
+		['iEne',    0, maxStat],
 		['iLevel',  1,   400],
-		['iResets', 0,   500],
+		['iResets', 0, maxResets],
 	];
+	if (isMuren && $('iCmd')) {
+		checks.push(['iCmd', 0, maxStat]);
+	}
 	checks.forEach(function(ck) {
 		var el = $(ck[0]);
+		if (!el) return;
 		var v = +el.value;
 		var bad = v < ck[1] || v > ck[2];
 		el.classList.toggle('warn-red', bad);
@@ -143,8 +275,8 @@ function addTab(){
 	if (!cls) { alert('Classe não implementada'); tabs.removeChild(newTab); return; }
 	$(newTabID).classList.add(cls);
 
-	// Prefix all IDs inside the new tab (divs first, then inputs/selects)
-	['div','input','select'].forEach(function(tag){
+	// Prefix all IDs inside the new tab (divs first, then inputs/selects/labels/spans)
+	['div','input','select','label','span'].forEach(function(tag){
 		var els = $(newTabID).getElementsByTagName(tag);
 		for (var i = 0; i < els.length; i++) {
 			if (els[i].id) els[i].id = newTabID + '_' + els[i].id;
@@ -193,7 +325,7 @@ function addTab(){
 	}
 
 	// Prefix IDs injected by panels (skip already-prefixed ones)
-	['input','select','strong','span'].forEach(function(tag){
+	['input','select','strong','span','div','label'].forEach(function(tag){
 		var els = $(newTabID).getElementsByTagName(tag);
 		for (var i = 0; i < els.length; i++) {
 			if (els[i].id && els[i].id.indexOf(newTabID) !== 0) {
@@ -208,13 +340,16 @@ function addTab(){
 		sm: {iStr:18, iAgi:18, iVit:15, iEne:30},
 		me: {iStr:22, iAgi:25, iVit:20, iEne:15},
 		mg: {iStr:26, iAgi:26, iVit:26, iEne:16},
-		dl: {iStr:26, iAgi:20, iVit:20, iEne:15},
+		dl: {iStr:26, iAgi:20, iVit:20, iEne:15, iCmd:25},
 	};
 	var stats = startStats[cls];
 	Object.keys(stats).forEach(function(id) {
 		var el = document.getElementById(newTabID + '_' + id);
 		if (el) el.value = stats[id];
 	});
+
+	// Apply current provider configuration to new tab
+	applyProviderToTab(newTabID, getProvider());
 
 	// Add tab nav link
 	var nav = $('tabNav');
@@ -608,20 +743,28 @@ function refresh(e){
 	var $ = function(id){ return document.getElementById(prefix + id); };
 	if (!sanitycheck(prefix)) return;
 
+	var isMuren = getProvider() === 'muren';
+	var lvl     = +$('iLevel').value;
+	var reset   = +$('iResets').value;
+	if (isMuren && reset > 100) reset = 100;
+
 	var str   = +$('iStr').value;
 	var agi   = +$('iAgi').value;
 	var vit   = +$('iVit').value;
 	var ene   = +$('iEne').value;
 	var cmd = 0;
 	if (c === 'dl') {
-		cmd = reset * 130;
 		var cmdEl = $('iCmd');
-		if (cmdEl) cmdEl.value = cmd;
+		if (cmdEl) {
+			if (!isMuren) {
+				cmd = reset * 130;
+				cmdEl.value = cmd;
+			} else {
+				cmd = +cmdEl.value || 25;
+			}
+		}
 	}
 	var objAttr = {str:str, agi:agi, vit:vit, ene:ene, cmd:cmd};
-
-	var lvl     = +$('iLevel').value;
-	var reset   = +$('iResets').value;
 	var vip     = +$('iSCVip').checked;
 	var quest3  = ($('iSCQ3a').checked ? 20 : 0)
 	            + ($('iSCQ3b').checked ? 20 : 0)
@@ -660,6 +803,7 @@ function refresh(e){
 	}
 
 	if (c === 'me') {
+		var maxBuffEne = isMuren ? 50000 : 32500;
 		var buffSel = $('iSTBuff');
 		switch(buffSel ? +buffSel.options[buffSel.selectedIndex].value : 0){
 			case 1:
@@ -667,15 +811,16 @@ function refresh(e){
 				defbuff = ((+$('iEne').value / 8) + 2) | 0;
 				break;
 			case 2:
-				dmgbuff = ((32500 / 7) + 3) | 0;
-				defbuff = ((32500 / 8) + 2) | 0;
+				dmgbuff = ((maxBuffEne / 7) + 3) | 0;
+				defbuff = ((maxBuffEne / 8) + 2) | 0;
 				break;
 		}
 	} else {
 		var meEl = $('iSCME');
 		if (meEl && +meEl.checked) {
-			dmgbuff = ((32500 / 7) + 3) | 0;
-			defbuff = ((32500 / 8) + 2) | 0;
+			var maxBuffEne = isMuren ? 50000 : 32500;
+			dmgbuff = ((maxBuffEne / 7) + 3) | 0;
+			defbuff = ((maxBuffEne / 8) + 2) | 0;
 		}
 	}
 
@@ -683,7 +828,27 @@ function refresh(e){
 	var green = ((ene/8)+2) | 0;
 	var blue  = ((ene/5)+5) | 0;
 
-	var pontos  = calcPontos(c, reset, vip, lvl, str, agi, vit, ene, quest3);
+	var pontos = 0;
+	if (isMuren) {
+		var hasMarlon = !!($('iSCQ3b') && $('iSCQ3b').checked);
+		var questBonusPoints = ($('iSCQ3a') && $('iSCQ3a').checked ? 20 : 0)
+		                     + ($('iSCQ3b') && $('iSCQ3b').checked ? 20 : 0)
+		                     + ($('iSCQ3c') && $('iSCQ3c').checked ? 30 : 0);
+		var murenRes = calcPontosMuren(c, reset, lvl, str, agi, vit, ene, cmd, hasMarlon, questBonusPoints);
+		pontos = murenRes.pontos;
+
+		var rBadge = $('oRealmBadge');
+		var rReq = $('oRealmReq');
+		if (rBadge) {
+			rBadge.textContent = murenRes.room.name + ' (' + murenRes.room.mult + 'x)';
+			rBadge.className = 'realm-badge realm-' + murenRes.room.id;
+		}
+		if (rReq) {
+			rReq.textContent = 'Req: Nv ' + murenRes.room.resetLvl;
+		}
+	} else {
+		pontos = calcPontos(c, reset, vip, lvl, str, agi, vit, ene, quest3);
+	}
 	var objAsa  = {iatasa:0, Tiatasa:0, idfasa:0, Tidfasa:0, absasa:0, Tabsasa:0, lasa:lasa, tasa:tasa};
 	var speed   = calcSpeed(c, agi);
 	speed += calcAsa(objAsa);
