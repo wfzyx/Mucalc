@@ -428,7 +428,7 @@ function calcAsa(objAsa){
 		case 2:
 		objAsa.Tiatasa = 1;
 		objAsa.Tidfasa = 2;
-		objAsa.Tabsasa = 1;
+		objAsa.Tabsasa = 2;
 		objAsa.iatasa = 32;
 		objAsa.idfasa = 45;
 		objAsa.absasa = 25;

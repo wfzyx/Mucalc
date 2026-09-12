@@ -161,70 +161,81 @@
 <!-- ── MAIN TEMPLATE (cloned per tab) ── -->
 <div style="display:none">
 <section id="model">
-	<div class="tab-content">
+	<div class="tab-content cockpit-grid">
 
-		<!-- LEFT: INPUTS -->
-		<div style="display:flex;flex-direction:column;gap:12px;">
+		<!-- COLUMN 1: PROGRESSION & ATTRIBUTES -->
+		<div class="pane-col">
 
-			<!-- Char Stats -->
+			<!-- Pontos Compact Hero -->
+			<div class="card card-points-compact">
+				<div class="points-compact-row">
+					<div class="points-compact-meta">
+						<span class="points-compact-tag">PONTOS</span>
+						<span class="points-compact-sub">Disponíveis</span>
+					</div>
+					<input id="oPontos" type="text" disabled value="0" class="points-compact-val">
+				</div>
+			</div>
+
+			<!-- Character Stats -->
 			<div class="card">
 				<h3>Personagem</h3>
 				<div class="realm-badge-row" id="pnlRealmInfo" style="display:none;">
 					<span class="realm-badge realm-muren" id="oRealmBadge">Muren (1x)</span>
 					<span class="realm-req" id="oRealmReq">Req: Nv 300</span>
 				</div>
-				<div class="form-row">
-					<label>Resets</label>
-					<input id="iResets" value="0" min="0" max="500" type="number">
-					<label class="check-label" id="lblVip" style="margin-left:6px"><input id="iSCVip" type="checkbox"/>VIP</label>
+				<div class="grid-2col" style="margin-bottom:8px">
+					<div class="form-item">
+						<label>Resets</label>
+						<div class="input-with-sub">
+							<input id="iResets" value="0" min="0" max="500" type="number">
+							<label class="check-label" id="lblVip"><input id="iSCVip" type="checkbox"/>VIP</label>
+						</div>
+					</div>
+					<div class="form-item">
+						<label>Level</label>
+						<input value="1" id="iLevel" min="1" max="400" type="number">
+					</div>
 				</div>
-				<div class="form-row">
-					<label>Level</label>
-					<input value="1" id="iLevel" min="1" max="400" type="number">
-				</div>
-				<div class="form-row">
-					<label>Força</label>
-					<input value="25" id="iStr" min="0" max="32500" type="number">
-				</div>
-				<div class="form-row">
-					<label>Agilidade</label>
-					<input value="25" id="iAgi" min="0" max="32500" type="number">
-				</div>
-				<div class="form-row">
-					<label>Vitalidade</label>
-					<input value="25" id="iVit" min="0" max="32500" type="number">
-				</div>
-				<div class="form-row">
-					<label>Energia</label>
-					<input value="25" id="iEne" min="0" max="32500" type="number">
+
+				<div class="stats-grid">
+					<div class="stat-box"><label>Força</label><input value="25" id="iStr" min="0" max="32500" type="number"></div>
+					<div class="stat-box"><label>Agilidade</label><input value="25" id="iAgi" min="0" max="32500" type="number"></div>
+					<div class="stat-box"><label>Vitalidade</label><input value="25" id="iVit" min="0" max="32500" type="number"></div>
+					<div class="stat-box"><label>Energia</label><input value="25" id="iEne" min="0" max="32500" type="number"></div>
 				</div>
 				<div id="tblPontos"><!-- DL liderança injected here --></div>
+
 				<div class="sub-group">
-					<div class="sub-group-title">Quest Lv3</div>
-					<div class="check-row">
-						<label class="check-label"><input id="iSCQ3a" type="checkbox"/>Parte 1 (+20)</label>
-						<label class="check-label"><input id="iSCQ3b" type="checkbox"/>Parte 2 (+20)</label>
-						<label class="check-label"><input id="iSCQ3c" type="checkbox"/>Parte 3 (+30)</label>
+					<div class="sub-group-title">Quest Lv3 / Marlon</div>
+					<div class="check-row compact-checks">
+						<label class="check-label"><input id="iSCQ3a" type="checkbox"/>P1 (+20)</label>
+						<label class="check-label"><input id="iSCQ3b" type="checkbox"/>P2 (+20)</label>
+						<label class="check-label"><input id="iSCQ3c" type="checkbox"/>P3 (+30)</label>
 					</div>
 				</div>
 			</div>
 
-			<!-- Equipment + Accessories (merged) -->
+		</div><!-- end col 1 -->
+
+		<!-- COLUMN 2: GEAR & MODIFIERS -->
+		<div class="pane-col">
+
+			<!-- Equipment -->
 			<div class="card">
 				<h3>Equipamento</h3>
 				<div id="tblArma"><!-- weapon panels injected --></div>
 				<div id="tblSpec">
-					<!-- Pendant right below weapon (similar slot) -->
 					<div class="sub-group">
 						<div class="sub-group-title">Pendant</div>
-						<div class="check-row">
-							<label class="check-label"><input id="iSCPen2" type="checkbox"/>+2%</label>
+						<div class="check-row compact-checks">
+							<label class="check-label"><input id="iSCPen2" type="checkbox"/>Dano Excelente +2%</label>
 						</div>
 					</div>
-					<!-- Wings / Cape injected here by addTab -->
+					<!-- Wings / Cape injected here -->
 				</div>
 				<div class="sub-group">
-					<div class="form-row">
+					<div class="form-row-compact">
 						<label>Pet</label>
 						<select id="iSTPet">
 							<option value="6">Horse</option>
@@ -239,36 +250,22 @@
 					</div>
 				</div>
 				<div class="sub-group">
-					<div class="sub-group-title">Set</div>
-					<div class="form-row">
-						<label>Vida +4</label>
-						<input value="0" id="iSVida" min="0" max="8" type="number">
-					</div>
-					<div class="form-row">
-						<label>Dim +4</label>
-						<input value="0" id="iSDiminui" min="0" max="8" type="number">
-					</div>
-					<div class="form-row">
-						<label>DDI +7</label>
-						<input value="0" id="iSDDI" min="0" max="6" type="number">
-					</div>
-					<div class="form-row">
-						<label>Life +16</label>
-						<input value="0" id="iSDeze" min="0" max="5" type="number">
-					</div>
-					<div class="form-row">
-						<label>PvM +5</label>
-						<input value="0" id="iSPvm" min="0" max="8" type="number">
-					</div>
-					<div class="form-row">
-						<label>Set +</label>
-						<select id="iSSet">
-							<option value="20">+13</option>
-							<option value="15">+12</option>
-							<option value="10">+11</option>
-							<option value="5">+10</option>
-							<option selected value="0">+0~9</option>
-						</select>
+					<div class="sub-group-title">Opções do Set</div>
+					<div class="grid-3col">
+						<div class="form-item"><label>Vida +4</label><input value="0" id="iSVida" min="0" max="8" type="number"></div>
+						<div class="form-item"><label>Dim +4</label><input value="0" id="iSDiminui" min="0" max="8" type="number"></div>
+						<div class="form-item"><label>DDI +7</label><input value="0" id="iSDDI" min="0" max="6" type="number"></div>
+						<div class="form-item"><label>Life +16</label><input value="0" id="iSDeze" min="0" max="5" type="number"></div>
+						<div class="form-item"><label>PvM +5</label><input value="0" id="iSPvm" min="0" max="8" type="number"></div>
+						<div class="form-item"><label>Nível Set</label>
+							<select id="iSSet">
+								<option value="20">+13</option>
+								<option value="15">+12</option>
+								<option value="10">+11</option>
+								<option value="5">+10</option>
+								<option selected value="0">+0~9</option>
+							</select>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -276,45 +273,40 @@
 			<!-- Buffs -->
 			<div class="card">
 				<h3>Buffs</h3>
-				<div class="check-row" id="tblBuffs">
+				<div class="check-row compact-checks" id="tblBuffs">
 					<label class="check-label"><input id="iSCMS" type="checkbox"/>MS Full (70%)</label>
 					<label class="check-label"><input id="iSCGF" type="checkbox"/>GF Full (135%)</label>
 					<!-- class-specific buffs injected -->
 				</div>
 			</div>
 
-		</div><!-- end inputs col -->
+		</div><!-- end col 2 -->
 
-		<!-- RIGHT: OUTPUTS -->
-		<div style="display:flex;flex-direction:column;gap:12px;">
+		<!-- COLUMN 3: COMBAT TELEMETRY & SIMULATOR -->
+		<div class="pane-col">
 
-			<!-- Points -->
-			<div class="card points-card">
-				<h3>Pontos Disponíveis</h3>
-				<div class="points-hero">
-					<input id="oPontos" type="text" disabled value="0">
-					<span class="points-hero-label">Pontos Restantes</span>
-				</div>
-			</div>
-
-			<!-- Status -->
+			<!-- Status Base (Vitals) -->
 			<div class="card">
 				<h3>Status Base</h3>
-				<div class="form-row"><label>HP</label><input id="oHP" type="text" disabled></div>
-				<div class="form-row"><label>MP</label><input id="oMP" type="text" disabled></div>
-				<div class="form-row"><label>SD</label><input id="oSD" type="text" disabled></div>
-				<div class="form-row"><label>AG</label><input id="oAG" type="text" disabled></div>
+				<div class="vitals-grid">
+					<div class="vital-cell vital-hp"><span class="vital-tag">HP</span><input id="oHP" type="text" disabled></div>
+					<div class="vital-cell vital-mp"><span class="vital-tag">MP</span><input id="oMP" type="text" disabled></div>
+					<div class="vital-cell vital-sd"><span class="vital-tag">SD</span><input id="oSD" type="text" disabled></div>
+					<div class="vital-cell vital-ag"><span class="vital-tag">AG</span><input id="oAG" type="text" disabled></div>
+				</div>
 			</div>
 
 			<!-- Advanced Status -->
 			<div class="card">
 				<h3>Status Avançado</h3>
-				<div class="form-row"><label>Vel. Ataque</label><input id="oSpeed" type="text" disabled></div>
-				<div class="form-row"><label>Defesa</label><input id="oDef" type="text" disabled></div>
-				<div class="form-row"><label>DR PvM</label><input id="oPvmDr" type="text" disabled></div>
-				<div class="form-row"><label>AR PvM</label><input id="oPvmAr" type="text" disabled></div>
-				<div class="form-row"><label>DR PvP</label><input id="oPvpDr" type="text" disabled></div>
-				<div class="form-row"><label>AR PvP</label><input id="oPvpAr" type="text" disabled></div>
+				<div class="telemetry-grid">
+					<div class="telemetry-cell"><span class="telemetry-label">Velocidade</span><input id="oSpeed" type="text" disabled></div>
+					<div class="telemetry-cell"><span class="telemetry-label">Defesa Total</span><input id="oDef" type="text" disabled></div>
+					<div class="telemetry-cell"><span class="telemetry-label">DR PvM</span><input id="oPvmDr" type="text" disabled></div>
+					<div class="telemetry-cell"><span class="telemetry-label">AR PvM</span><input id="oPvmAr" type="text" disabled></div>
+					<div class="telemetry-cell"><span class="telemetry-label">DR PvP</span><input id="oPvpDr" type="text" disabled></div>
+					<div class="telemetry-cell"><span class="telemetry-label">AR PvP</span><input id="oPvpAr" type="text" disabled></div>
+				</div>
 			</div>
 
 			<!-- Damage -->
@@ -326,11 +318,20 @@
 			<!-- Simulator -->
 			<div class="card">
 				<h3>Simulador de Dano</h3>
-				<div class="form-row"><label>Dano Planejado</label><input type="number" min="0" id="iSampledmg" style="width:100px"></div>
-				<div class="form-row"><label>Dano Recebido</label><input id="oSampleResult" type="text" disabled style="width:100px"></div>
+				<div class="sim-row">
+					<div class="sim-input-box">
+						<label>Planejado</label>
+						<input type="number" min="0" id="iSampledmg" value="0">
+					</div>
+					<span class="sim-arrow">➔</span>
+					<div class="sim-output-box">
+						<label>Recebido</label>
+						<input id="oSampleResult" type="text" disabled value="0">
+					</div>
+				</div>
 			</div>
 
-		</div><!-- end outputs col -->
+		</div><!-- end col 3 -->
 
 	</div><!-- end tab-content grid -->
 </section>
