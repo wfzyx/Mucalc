@@ -68,8 +68,8 @@ function closeTab(tabId) {
 	var tabs = $('tabs');
 	if (!tabs) return;
 	var sections = tabs.getElementsByTagName('section');
-	if (sections.length <= 1) {
-		alert('É necessário manter ao menos uma aba de personagem aberta.');
+	if (sections.length === 0) {
+		openProviderOverlay();
 		return;
 	}
 
@@ -91,6 +91,9 @@ function closeTab(tabId) {
 	if (remaining.length > 0) {
 		window.location.hash = '#' + remaining[0].id;
 		syncTabNav();
+	} else {
+		window.location.hash = '';
+		openProviderOverlay();
 	}
 	saveBuilds();
 }
@@ -304,25 +307,7 @@ function restoreTab(tabData, index) {
 	a.href = '#' + newTabID;
 	a.className = 'tab-link-' + cls;
 	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
-
-	var titleSpan = document.createElement('span');
-	titleSpan.textContent = tabData.title || (classNames[cls] + ' ' + (index + 1));
-	a.appendChild(titleSpan);
-
-	var closeBtn = document.createElement('button');
-	closeBtn.type = 'button';
-	closeBtn.className = 'tab-close-btn';
-	closeBtn.title = 'Fechar esta aba';
-	closeBtn.textContent = '×';
-	closeBtn.onclick = (function(tid) {
-		return function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			closeTab(tid);
-		};
-	})(newTabID);
-	a.appendChild(closeBtn);
-
+	a.textContent = tabData.title || (classNames[cls] + ' ' + (index + 1));
 	nav.appendChild(a);
 
 	var anyCheck = newTab.querySelector('.slot-opts input[type="checkbox"]');
@@ -757,25 +742,7 @@ function addTab(){
 	a.href = '#' + newTabID;
 	a.className = 'tab-link-' + cls;
 	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
-
-	var titleSpan = document.createElement('span');
-	titleSpan.textContent = classNames[cls] + ' ' + (existingSections + 1);
-	a.appendChild(titleSpan);
-
-	var closeBtn = document.createElement('button');
-	closeBtn.type = 'button';
-	closeBtn.className = 'tab-close-btn';
-	closeBtn.title = 'Fechar esta aba';
-	closeBtn.textContent = '×';
-	closeBtn.onclick = (function(tid) {
-		return function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			closeTab(tid);
-		};
-	})(newTabID);
-	a.appendChild(closeBtn);
-
+	a.textContent = classNames[cls] + ' ' + (existingSections + 1);
 	nav.appendChild(a);
 
 	window.location.href = '#' + newTabID;
@@ -1276,21 +1243,44 @@ function refresh(e){
 	var speed   = calcSpeed(c, agi);
 	speed += calcAsa(objAsa);
 
+	// Primary Weapon options
+	var wpSpeed = 0, wpLvl20 = 0, addwp = 0;
+	if (c === 'sm') {
+		if ($('iSCStaffSpeed') && $('iSCStaffSpeed').checked) wpSpeed = 7;
+		if ($('iSCStaffLvl20') && $('iSCStaffLvl20').checked) wpLvl20 = Math.floor(lvl / 20);
+		if ($('iSCStaff2') && $('iSCStaff2').checked) addwp = 1;
+	} else {
+		if ($('iSCWpSpeed') && $('iSCWpSpeed').checked) wpSpeed = 7;
+		if ($('iSCWpLvl20') && $('iSCWpLvl20').checked) wpLvl20 = Math.floor(lvl / 20);
+		if ($('iSCWp2') && $('iSCWp2').checked) addwp = 1;
+		if (c === 'mg') {
+			if ($('iSCStaffSpeed') && $('iSCStaffSpeed').checked) wpSpeed += 7;
+			if ($('iSCStaffLvl20') && $('iSCStaffLvl20').checked) wpLvl20 += Math.floor(lvl / 20);
+			if ($('iSCStaff2') && $('iSCStaff2').checked) addwp = 1;
+		}
+	}
+
 	// Pendant offensive options
 	var isPenSpeed = $('iSCPenSpeed') && $('iSCPenSpeed').checked;
 	var isPenLvl20 = $('iSCPenLvl20') && $('iSCPenLvl20').checked;
 	var penLvlDmg  = isPenLvl20 ? Math.floor(lvl / 20) : 0;
+	var addpendant = $('iSCPen2') && $('iSCPen2').checked ? 1 : 0;
+
+	// Total attack speed additions
 	if (isPenSpeed) speed += 7;
+	speed += wpSpeed;
 
 	// Two-handed & Secondary weapon mechanics
 	var is2H = $('iSC2H') && $('iSC2H').checked;
 	var offhandType = $('iSOffhandType') ? $('iSOffhandType').value : 'shield';
-	var wp2min = 0, wp2max = 0, wp2exc = 0;
+	var wp2min = 0, wp2max = 0, wp2exc = 0, wp2Lvl20 = 0;
 	if (!is2H && offhandType === 'weapon') {
 		var wp2minEl = $('iSWp2min'), wp2maxEl = $('iSWp2max'), wp2excEl = $('iSCWp2b');
 		if (wp2minEl && +wp2minEl.value > 0) wp2min = +wp2minEl.value;
 		if (wp2maxEl && +wp2maxEl.value > 0) wp2max = +wp2maxEl.value;
 		if (wp2excEl && wp2excEl.checked) wp2exc = 1;
+		if ($('iSCWp2Speed') && $('iSCWp2Speed').checked) speed += 7;
+		if ($('iSCWp2Lvl20') && $('iSCWp2Lvl20').checked) wp2Lvl20 = Math.floor(lvl / 20);
 	}
 
 	var ampVal = Math.round(objAsa.iatasa * 100);
@@ -1311,6 +1301,7 @@ function refresh(e){
 		pen: addpendant,
 		penLvlDmg: penLvlDmg,
 		wp: addwp,
+		wpLvlDmg: wpLvl20 + wp2Lvl20,
 		stfp: staff,
 		imp: imp,
 		iatasa: objAsa.iatasa,

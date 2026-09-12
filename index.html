@@ -56,19 +56,33 @@
 	<!-- Physical Weapon -->
 	<div id="pnlArma">
 		<div class="slot-weap-row">
-			<input value="0" min="0" id="iSWpmin" type="number" placeholder="Mín" title="Dano Físico Mínimo">
+			<input value="0" min="0" id="iSWpmin" type="number" placeholder="Mín" title="Dano Físico Mínimo" oninput="refresh(event)">
 			<span class="weap-dash">-</span>
-			<input value="0" min="0" id="iSWpmax" type="number" placeholder="Máx" title="Dano Físico Máximo">
-			<label class="slot-opt-chip chip-wp"><input id="iSCWp2" type="checkbox"/><span>+2%</span></label>
+			<input value="0" min="0" id="iSWpmax" type="number" placeholder="Máx" title="Dano Físico Máximo" oninput="refresh(event)">
+		</div>
+		<div class="weap-opts-grid">
+			<label class="slot-opt-chip chip-wp" title="Aumento de Dano +2%"><input id="iSCWp2" type="checkbox" onchange="refresh(event)"/><span>+2%</span></label>
+			<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCWpExc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
+			<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCWpSpeed" type="checkbox" onchange="refresh(event)"/><span>Vel +7</span></label>
+			<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCWpLvl20" type="checkbox" onchange="refresh(event)"/><span>Nv/20</span></label>
+			<label class="slot-opt-chip chip-wp" title="Taxa Dano Crítico +25% (Sorte)"><input id="iSCWpLuck" type="checkbox" onchange="refresh(event)"/><span>Sorte</span></label>
+			<label class="slot-opt-chip chip-wp" title="Habilidade da Arma (Skill)"><input id="iSCWpSkill" type="checkbox" onchange="refresh(event)"/><span>Skill</span></label>
 		</div>
 	</div>
 
 	<!-- Staff (magical weapon) -->
 	<div id="pnlStaff">
 		<div class="slot-weap-row">
-			<input value="0" min="0" id="iSStaff" type="number" placeholder="%" title="Dano Mágico (%)">
+			<input value="0" min="0" id="iSStaff" type="number" placeholder="%" title="Dano Mágico (%)" oninput="refresh(event)">
 			<span class="weap-unit">%</span>
-			<label class="slot-opt-chip chip-wp"><input id="iSCStaff2" type="checkbox"/><span>+2%</span></label>
+		</div>
+		<div class="weap-opts-grid">
+			<label class="slot-opt-chip chip-wp" title="Aumento de Dano Mágico +2%"><input id="iSCStaff2" type="checkbox" onchange="refresh(event)"/><span>+2%</span></label>
+			<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCStaffExc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
+			<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCStaffSpeed" type="checkbox" onchange="refresh(event)"/><span>Vel +7</span></label>
+			<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCStaffLvl20" type="checkbox" onchange="refresh(event)"/><span>Nv/20</span></label>
+			<label class="slot-opt-chip chip-wp" title="Taxa Dano Crítico +25% (Sorte)"><input id="iSCStaffLuck" type="checkbox" onchange="refresh(event)"/><span>Sorte</span></label>
+			<label class="slot-opt-chip chip-wp" title="Habilidade Especial"><input id="iSCStaffSkill" type="checkbox" onchange="refresh(event)"/><span>Skill</span></label>
 		</div>
 	</div>
 
@@ -377,11 +391,20 @@
 						</div>
 
 						<!-- Arma Secundária Mode -->
-						<div class="slot-weap-row offhand-weap-opts" id="pnlOffhandWeap" style="display:none;">
-							<input value="0" min="0" id="iSWp2min" type="number" placeholder="Mín" title="Dano Físico Secundário Mínimo" oninput="refresh(event)">
-							<span class="weap-dash">-</span>
-							<input value="0" min="0" id="iSWp2max" type="number" placeholder="Máx" title="Dano Físico Secundário Máximo" oninput="refresh(event)">
-							<label class="slot-opt-chip chip-wp" title="Dano Excelente Secundário +2%"><input id="iSCWp2b" type="checkbox" onchange="refresh(event)"/><span>+2%</span></label>
+						<div class="offhand-weap-opts" id="pnlOffhandWeap" style="display:none;">
+							<div class="slot-weap-row">
+								<input value="0" min="0" id="iSWp2min" type="number" placeholder="Mín" title="Dano Físico Secundário Mínimo" oninput="refresh(event)">
+								<span class="weap-dash">-</span>
+								<input value="0" min="0" id="iSWp2max" type="number" placeholder="Máx" title="Dano Físico Secundário Máximo" oninput="refresh(event)">
+							</div>
+							<div class="weap-opts-grid">
+								<label class="slot-opt-chip chip-wp" title="Aumento de Dano Secundário +2%"><input id="iSCWp2b" type="checkbox" onchange="refresh(event)"/><span>+2%</span></label>
+								<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCWp2Exc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
+								<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCWp2Speed" type="checkbox" onchange="refresh(event)"/><span>Vel +7</span></label>
+								<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCWp2Lvl20" type="checkbox" onchange="refresh(event)"/><span>Nv/20</span></label>
+								<label class="slot-opt-chip chip-wp" title="Taxa Dano Crítico +25% (Sorte)"><input id="iSCWp2Luck" type="checkbox" onchange="refresh(event)"/><span>Sorte</span></label>
+								<label class="slot-opt-chip chip-wp" title="Skill"><input id="iSCWp2Skill" type="checkbox" onchange="refresh(event)"/><span>Skill</span></label>
+							</div>
 						</div>
 					</div>
 
@@ -554,14 +577,14 @@
 
 	<div class="header-actions">
 		<select id="classes" title="Selecionar classe para adicionar">
-			<option value="1">BK — Blade Knight</option>
-			<option value="2">SM — Soul Master</option>
-			<option value="3">ME — Muse Elf</option>
-			<option value="4">MG — Magic Gladiator</option>
-			<option value="5">DL — Dark Lord</option>
+			<option value="1">Blade Knight</option>
+			<option value="2">Soul Master</option>
+			<option value="3">Muse Elf</option>
+			<option value="4">Magic Gladiator</option>
+			<option value="5">Dark Lord</option>
 		</select>
-		<button type="button" class="btn-add-tab" onclick="addTab()" title="Adicionar novo personagem">+ Adicionar</button>
-		<button type="button" class="btn-delete-tab" onclick="closeTab()" title="Excluir aba ativa">✕ Excluir</button>
+		<button type="button" class="btn-add-tab" onclick="addTab()" title="Adicionar novo personagem">+</button>
+		<button type="button" class="btn-delete-tab" onclick="closeTab()" title="Excluir aba ativa">🗑️</button>
 	</div>
 </header>
 

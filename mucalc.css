@@ -1,97 +1,126 @@
-/* ── THEME PALETTES (MUCABrasil vs Land of Muren) ── */
+/* ══════════════════════════════════════════════════════════════
+   GLOBAL THEMING & FOUNDATIONS
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --radius: 8px;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+
+  --warn-yellow: #f59e0b;
+  --warn-orange: #ef4444;
+
+  /* Class identity accents */
+  --bk-color: #ef4444;
+  --bk-glow: rgba(239, 68, 68, 0.28);
+  --sm-color: #06b6d4;
+  --sm-glow: rgba(6, 182, 212, 0.28);
+  --me-color: #10b981;
+  --me-glow: rgba(16, 185, 129, 0.28);
+  --mg-color: #d946ef;
+  --mg-glow: rgba(217, 70, 239, 0.28);
+  --dl-color: #f59e0b;
+  --dl-glow: rgba(245, 158, 11, 0.28);
+}
+
+/* ── THEME 1: MUCABrasil — "Blood Iron & Obsidian" (Season 2 PVP) ── */
+:root,
 body[data-server="mucabrasil"],
-:root:not([data-server="muren"]) {
-  --bg: #06070d;
-  --card-bg: rgba(10, 13, 24, 0.88);
+html[data-server="mucabrasil"] {
+  --bg: #06070a;
+  --bg-gradient: linear-gradient(180deg, rgba(8, 9, 14, 0.92) 0%, rgba(4, 5, 8, 0.98) 100%);
+  --header-bg: rgba(9, 10, 16, 0.96);
+  --header-border: rgba(239, 68, 68, 0.22);
+
+  --card-bg: rgba(13, 15, 23, 0.90);
   --card-border: rgba(255, 255, 255, 0.08);
-  --card-border-hover: rgba(239, 68, 68, 0.35);
-  --card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --card-border-hover: rgba(239, 68, 68, 0.4);
+  --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  --points-bg: linear-gradient(135deg, rgba(28, 16, 22, 0.94) 0%, rgba(13, 15, 23, 0.94) 100%);
+  --points-border: rgba(239, 68, 68, 0.35);
+  --points-glow: rgba(239, 68, 68, 0.22);
+  --points-val-color: #f87171;
+
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-label: #cbd5e1;
+
+  --input-bg: rgba(3, 4, 8, 0.82);
+  --input-border: rgba(255, 255, 255, 0.12);
+  --input-focus: #ef4444;
+  --input-focus-glow: rgba(239, 68, 68, 0.35);
+  --output-bg: rgba(0, 0, 0, 0.65);
+  --output-text: #fca5a5;
 
   --accent: #ef4444;
   --accent-glow: rgba(239, 68, 68, 0.35);
   --accent-hover: #dc2626;
 
-  --server-glow: rgba(239, 68, 68, 0.25);
+  --server-dot: #ef4444;
+  --server-pill-bg: rgba(239, 68, 68, 0.1);
+  --server-pill-border: rgba(239, 68, 68, 0.35);
+  --server-pill-text: #fca5a5;
+
+  --btn-add-bg: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  --btn-add-border: rgba(239, 68, 68, 0.5);
+
+  --slot-bg: rgba(6, 7, 13, 0.72);
+  --slot-border: rgba(255, 255, 255, 0.07);
+  --slot-border-hover: rgba(239, 68, 68, 0.35);
+
   --brand-gradient: linear-gradient(135deg, #ffffff 0%, #fca5a5 100%);
 }
 
-body[data-server="muren"] {
-  --bg: #09080b;
-  --card-bg: rgba(18, 16, 15, 0.88);
-  --card-border: rgba(245, 158, 11, 0.18);
-  --card-border-hover: rgba(245, 158, 11, 0.45);
-  --card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(251, 191, 36, 0.1);
+/* ── THEME 2: Land of Muren — "Arcane Cobalt & Moonlight Frost" ── */
+body[data-server="muren"],
+html[data-server="muren"] {
+  --bg: #02050e;
+  --bg-gradient: linear-gradient(180deg, rgba(3, 7, 20, 0.92) 0%, rgba(1, 3, 10, 0.98) 100%);
+  --header-bg: rgba(5, 11, 28, 0.96);
+  --header-border: rgba(56, 189, 248, 0.28);
 
-  --accent: #f59e0b;
-  --accent-glow: rgba(245, 158, 11, 0.35);
-  --accent-hover: #d97706;
+  --card-bg: rgba(7, 15, 34, 0.90);
+  --card-border: rgba(56, 189, 248, 0.16);
+  --card-border-hover: rgba(56, 189, 248, 0.5);
+  --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(56, 189, 248, 0.12);
 
-  --server-glow: rgba(245, 158, 11, 0.35);
-  --brand-gradient: linear-gradient(135deg, #ffffff 0%, #fcd34d 100%);
-}
+  --points-bg: linear-gradient(135deg, rgba(12, 28, 58, 0.94) 0%, rgba(7, 15, 34, 0.94) 100%);
+  --points-border: rgba(56, 189, 248, 0.4);
+  --points-glow: rgba(56, 189, 248, 0.25);
+  --points-val-color: #38bdf8;
 
-body[data-server="muren"] .app-header {
-  border-bottom-color: rgba(245, 158, 11, 0.25);
-}
+  --text: #f0f9ff;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-label: #bae6fd;
 
-body[data-server="muren"] .server-indicator-dot {
-  background: #f59e0b;
-  box-shadow: 0 0 8px #f59e0b;
-}
+  --input-bg: rgba(2, 6, 20, 0.82);
+  --input-border: rgba(56, 189, 248, 0.2);
+  --input-focus: #38bdf8;
+  --input-focus-glow: rgba(56, 189, 248, 0.35);
+  --output-bg: rgba(1, 4, 14, 0.7);
+  --output-text: #7dd3fc;
 
-body[data-server="muren"] .current-server-pill {
-  border-color: rgba(245, 158, 11, 0.35);
-  background: rgba(24, 20, 14, 0.8);
-}
+  --accent: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.35);
+  --accent-hover: #0ea5e9;
 
-body[data-server="muren"] .btn-add-tab {
-  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%) !important;
-  border-color: rgba(251, 191, 36, 0.3) !important;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3) !important;
-}
+  --server-dot: #38bdf8;
+  --server-pill-bg: rgba(56, 189, 248, 0.12);
+  --server-pill-border: rgba(56, 189, 248, 0.4);
+  --server-pill-text: #7dd3fc;
 
-body[data-server="muren"] .card h3::before {
-  background: #f59e0b;
-  box-shadow: 0 0 6px #f59e0b;
-}
+  --btn-add-bg: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  --btn-add-border: rgba(56, 189, 248, 0.5);
 
-:root {
-  --bg: #05070e;
-  --card-bg: rgba(9, 13, 26, 0.88);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --card-border-hover: rgba(255, 255, 255, 0.16);
-  --card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  --slot-bg: rgba(3, 9, 24, 0.75);
+  --slot-border: rgba(56, 189, 248, 0.12);
+  --slot-border-hover: rgba(56, 189, 248, 0.4);
 
-  --text: #f1f5f9;
-  --text-muted: #8391b4;
-  --text-dim: #506085;
-  --text-label: #a6b6dd;
-
-  --input-bg: rgba(3, 5, 12, 0.82);
-  --input-border: rgba(255, 255, 255, 0.12);
-  --input-focus: #6366f1;
-  --input-focus-glow: rgba(99, 102, 241, 0.3);
-  --output-bg: rgba(0, 0, 0, 0.58);
-  --output-text: #93c5fd;
-
-  --accent: #4f46e5;
-  --accent-glow: rgba(79, 70, 229, 0.35);
-  --accent-hover: #6366f1;
-
-  --warn-yellow: #f59e0b;
-  --warn-orange: #ef4444;
-
-  /* Class themes */
-  --bk-color: #ef4444;
-  --bk-glow: rgba(239, 68, 68, 0.25);
-  --sm-color: #06b6d4;
-  --sm-glow: rgba(6, 182, 212, 0.25);
-  --me-color: #10b981;
-  --me-glow: rgba(16, 185, 129, 0.25);
-  --mg-color: #d946ef;
-  --mg-glow: rgba(217, 70, 239, 0.25);
-  --dl-color: #f59e0b;
-  --dl-glow: rgba(245, 158, 11, 0.25);
+  --brand-gradient: linear-gradient(135deg, #ffffff 0%, #7dd3fc 100%);
 }
 
 *, *::before, *::after {
@@ -103,14 +132,14 @@ body[data-server="muren"] .card h3::before {
 body {
   background-color: var(--bg);
   background-image: 
-    linear-gradient(to bottom, rgba(5, 7, 14, 0.90), rgba(5, 7, 14, 0.98)),
+    var(--bg-gradient),
     url("bg.jpg");
   background-repeat: no-repeat;
   background-position: right top;
   background-size: cover;
   background-attachment: fixed;
   color: var(--text);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: var(--font-main);
   font-size: 13px;
   line-height: 1.35;
   min-height: 100dvh;
@@ -221,9 +250,9 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   height: 220px;
   aspect-ratio: 1 / 1;
   border-radius: 18px;
-  background: rgba(11, 16, 34, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  background: rgba(16, 12, 18, 0.92);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 28px rgba(239, 68, 68, 0.2);
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   color: var(--text);
@@ -234,9 +263,9 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 
 .provider-card:hover {
   transform: translateY(-4px) scale(1.03);
-  border-color: rgba(99, 102, 241, 0.6);
-  background: rgba(18, 24, 52, 0.96);
-  box-shadow: 0 20px 48px -4px rgba(79, 70, 229, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-color: rgba(239, 68, 68, 0.85);
+  background: rgba(24, 14, 20, 0.98);
+  box-shadow: 0 20px 48px -4px rgba(239, 68, 68, 0.45), 0 0 40px rgba(239, 68, 68, 0.35);
 }
 
 .provider-card:active {
@@ -251,33 +280,36 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   text-align: center;
   pointer-events: none;
   display: block;
-}
-
-.provider-card:hover .provider-card-title {
-  color: #e0e7ff;
-  text-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
-}
-
-/* ── Land of Muren Card - Gold Glow ── */
-.provider-card-lom {
-  border-color: rgba(245, 158, 11, 0.48) !important;
-  box-shadow: 0 0 32px -2px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(251, 191, 36, 0.25) !important;
-}
-
-.provider-card-lom:hover {
-  border-color: rgba(245, 158, 11, 0.9) !important;
-  box-shadow: 0 0 48px rgba(245, 158, 11, 0.55), inset 0 1px 0 rgba(251, 191, 36, 0.5) !important;
-  background: rgba(22, 19, 11, 0.96) !important;
-}
-
-.provider-card-lom .provider-card-title {
-  background: linear-gradient(135deg, #ffffff 10%, #fcd34d 100%);
+  background: linear-gradient(135deg, #ffffff 10%, #fca5a5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+.provider-card:hover .provider-card-title {
+  text-shadow: 0 0 24px rgba(239, 68, 68, 0.6);
+}
+
+/* ── Land of Muren Card - Arcane Moonlight Glow ── */
+.provider-card-lom {
+  background: rgba(8, 16, 36, 0.92) !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 28px rgba(56, 189, 248, 0.22) !important;
+}
+
+.provider-card-lom:hover {
+  border-color: rgba(56, 189, 248, 0.9) !important;
+  box-shadow: 0 20px 48px -4px rgba(56, 189, 248, 0.45), 0 0 40px rgba(56, 189, 248, 0.38) !important;
+  background: rgba(12, 24, 52, 0.98) !important;
+}
+
+.provider-card-lom .provider-card-title {
+  background: linear-gradient(135deg, #ffffff 10%, #7dd3fc 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
 .provider-card-lom:hover .provider-card-title {
-  text-shadow: 0 0 24px rgba(245, 158, 11, 0.6);
+  text-shadow: 0 0 24px rgba(56, 189, 248, 0.6) !important;
 }
 
 .provider-card:hover .provider-card-cta {
@@ -379,16 +411,15 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 .header-tab-dock a {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 6px 3px 10px;
-  border-radius: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
   text-decoration: none;
   color: var(--text-muted);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   transition: all 0.15s ease;
   white-space: nowrap;
 }
@@ -396,28 +427,14 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 .header-tab-dock a:hover {
   color: var(--text);
   background: rgba(255, 255, 255, 0.08);
+  border-color: var(--card-border-hover);
 }
 
-.tab-close-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-dim);
-  font-size: 11px;
-  line-height: 1;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  padding: 0;
-}
-
-.tab-close-btn:hover {
-  background: rgba(239, 68, 68, 0.5);
-  color: #ffffff;
+.header-tab-dock a.active {
+  color: var(--text);
+  background: var(--server-pill-bg);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
 }
 
 .header-actions {
@@ -430,40 +447,48 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 .btn-add-tab {
   display: inline-flex;
   align-items: center;
-  padding: 4px 10px;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+  border: 1px solid var(--btn-add-border);
+  background: var(--btn-add-bg);
   color: #ffffff;
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 2px 8px var(--accent-glow);
   transition: all 0.18s ease;
+  padding: 0;
+  line-height: 1;
 }
 
 .btn-add-tab:hover {
   transform: translateY(-1px);
+  filter: brightness(1.15);
 }
 
 .btn-delete-tab {
   display: inline-flex;
   align-items: center;
-  padding: 4px 8px;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.35);
   background: rgba(239, 68, 68, 0.12);
   color: #fca5a5;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.18s ease;
+  padding: 0;
+  line-height: 1;
 }
 
 .btn-delete-tab:hover {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: rgba(239, 68, 68, 0.45);
-  color: #ffffff;
+  background: rgba(239, 68, 68, 0.28);
+  border-color: rgba(239, 68, 68, 0.6);
+  transform: translateY(-1px);
 }
 
 /* ── Current Server Pill ── */
@@ -473,9 +498,9 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   gap: 6px;
   padding: 4px 10px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(12, 17, 34, 0.7);
-  color: var(--text);
+  border: 1px solid var(--server-pill-border);
+  background: var(--server-pill-bg);
+  color: var(--server-pill-text);
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
@@ -484,8 +509,16 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 }
 
 .current-server-pill:hover {
-  background: rgba(19, 25, 50, 0.9);
-  border-color: rgba(99, 102, 241, 0.4);
+  filter: brightness(1.15);
+  border-color: var(--accent);
+}
+
+.server-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--server-dot);
+  box-shadow: 0 0 8px var(--server-dot);
 }
 
 .server-indicator-dot {
@@ -664,9 +697,9 @@ article.tabs section:target { display: block; }
 
 /* ── Compact Points Hero Banner ── */
 .card-points-compact {
-  background: linear-gradient(135deg, rgba(17, 24, 48, 0.92) 0%, rgba(9, 13, 26, 0.94) 100%);
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), 0 0 14px rgba(99, 102, 241, 0.15);
+  background: var(--points-bg);
+  border-color: var(--points-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), 0 0 14px var(--points-glow);
   padding: 6px 10px;
 }
 
@@ -686,7 +719,7 @@ article.tabs section:target { display: block; }
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #a5b4fc;
+  color: var(--server-pill-text);
 }
 
 .points-compact-sub {
@@ -704,8 +737,8 @@ article.tabs section:target { display: block; }
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #60a5fa !important;
-  text-shadow: 0 0 14px rgba(96, 165, 250, 0.45);
+  color: var(--points-val-color) !important;
+  text-shadow: 0 0 14px var(--points-glow);
   text-align: right;
   padding: 0 !important;
 }
@@ -909,19 +942,39 @@ article.tabs section:target { display: block; }
 }
 
 .inv-slot {
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--slot-bg);
+  border: 1px solid var(--slot-border);
   border-radius: 6px;
-  padding: 5px 7px;
+  padding: 5px 6px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 66px;
-  transition: border-color 0.15s ease;
+  min-height: 74px;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .inv-slot:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: var(--slot-border-hover);
+}
+
+.weap-opts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  width: 100%;
+  margin-top: 3px;
+}
+
+.weap-opts-grid .slot-opt-chip {
+  display: flex;
+  justify-content: center;
+}
+
+.weap-opts-grid .slot-opt-chip span {
+  width: 100%;
+  text-align: center;
+  font-size: 8.5px;
+  padding: 2px 1px;
 }
 
 /* ── 2-Handed & Offhand specifics ── */
