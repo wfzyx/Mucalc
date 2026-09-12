@@ -122,20 +122,34 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   color: var(--text-muted);
   font-size: 14px;
   max-width: 480px;
-  margin: 0 auto;
+  margin: 0 auto 8px;
+}
+
+.provider-switch-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-align: center;
 }
 
 .provider-cards-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
   width: 100%;
-  max-width: 680px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 580px) {
   .provider-cards-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 16px;
   }
 }
@@ -146,28 +160,30 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 150px;
-  padding: 36px 28px;
-  border-radius: 16px;
-  background: rgba(11, 16, 34, 0.85);
+  width: 220px;
+  height: 220px;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  background: rgba(11, 16, 34, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   cursor: pointer;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   color: var(--text);
   font-family: inherit;
   user-select: none;
+  padding: 20px;
 }
 
 .provider-card:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-4px) scale(1.03);
   border-color: rgba(99, 102, 241, 0.6);
-  background: rgba(18, 24, 52, 0.95);
-  box-shadow: 0 18px 44px -4px rgba(79, 70, 229, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: rgba(18, 24, 52, 0.96);
+  box-shadow: 0 20px 48px -4px rgba(79, 70, 229, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .provider-card:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .provider-card-title {
@@ -175,8 +191,9 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   font-weight: 800;
   color: #ffffff;
   letter-spacing: -0.01em;
+  text-align: center;
   pointer-events: none;
-  transition: color 0.18s ease;
+  display: block;
 }
 
 .provider-card:hover .provider-card-title {
@@ -186,14 +203,14 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 
 /* ── Land of Muren Card - Gold Glow ── */
 .provider-card-lom {
-  border-color: rgba(245, 158, 11, 0.45) !important;
-  box-shadow: 0 0 28px -2px rgba(245, 158, 11, 0.24), inset 0 1px 0 rgba(251, 191, 36, 0.22) !important;
+  border-color: rgba(245, 158, 11, 0.48) !important;
+  box-shadow: 0 0 32px -2px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(251, 191, 36, 0.25) !important;
 }
 
 .provider-card-lom:hover {
-  border-color: rgba(245, 158, 11, 0.85) !important;
-  box-shadow: 0 0 44px rgba(245, 158, 11, 0.5), inset 0 1px 0 rgba(251, 191, 36, 0.5) !important;
-  background: rgba(20, 18, 10, 0.95) !important;
+  border-color: rgba(245, 158, 11, 0.9) !important;
+  box-shadow: 0 0 48px rgba(245, 158, 11, 0.55), inset 0 1px 0 rgba(251, 191, 36, 0.5) !important;
+  background: rgba(22, 19, 11, 0.96) !important;
 }
 
 .provider-card-lom .provider-card-title {
@@ -802,6 +819,12 @@ article.tabs section:target { display: block; }
   background: rgba(6, 182, 212, 0.2);
   border-color: rgba(6, 182, 212, 0.5);
   color: #67e8f9;
+}
+
+.chip-ref input:checked + span {
+  background: rgba(168, 85, 247, 0.22);
+  border-color: rgba(168, 85, 247, 0.6);
+  color: #e9d5ff;
 }
 
 .chip-vida input:checked + span {

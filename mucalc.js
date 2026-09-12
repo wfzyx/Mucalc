@@ -13,6 +13,7 @@ function initProviderSession() {
 	} else {
 		window.currentProvider = sessionProv;
 		updateProviderUI();
+		loadBuilds(sessionProv);
 	}
 }
 
@@ -27,24 +28,17 @@ function closeProviderOverlay() {
 }
 
 function chooseSessionProvider(prov) {
+	var oldProv = getProvider();
+	saveBuilds(oldProv);
+
 	window.currentProvider = prov;
 	sessionStorage.setItem('mucalc_session_provider', prov);
 	localStorage.setItem('mucalc_provider', prov);
 	closeProviderOverlay();
 	updateProviderUI();
 
-	// Refresh all open tabs
-	var tabs = document.getElementById('tabs');
-	if (tabs) {
-		var sections = tabs.getElementsByTagName('section');
-		for (var i = 0; i < sections.length; i++) {
-			var sec = sections[i];
-			var firstInput = sec.querySelector('input[id$="_iStr"]');
-			if (firstInput) {
-				refresh({ target: firstInput });
-			}
-		}
-	}
+	// Load saved builds for the selected provider
+	loadBuilds(prov);
 }
 
 function setProvider(prov) {
@@ -64,6 +58,209 @@ function updateProviderUI() {
 		for (var i = 0; i < sections.length; i++) {
 			applyProviderToTab(sections[i].id, prov);
 		}
+	}
+}
+
+function serializeBuilds() {
+	var tabs = document.getElementById('tabs');
+	if (!tabs) return [];
+	var sections = tabs.getElementsByTagName('section');
+	var data = [];
+	for (var i = 0; i < sections.length; i++) {
+		var sec = sections[i];
+		var tabId = sec.id;
+		var cls = sec.className.trim().split(' ')[0];
+		var navLink = document.querySelector('#tabNav a[href="#' + tabId + '"]');
+		var tabTitle = navLink ? navLink.textContent : '';
+
+		var formValues = {};
+		var inputs = sec.querySelectorAll('input, select');
+		for (var j = 0; j < inputs.length; j++) {
+			var inp = inputs[j];
+			if (inp.id && inp.id.indexOf(tabId + '_') === 0) {
+				var key = inp.id.substring(tabId.length + 1);
+				if (inp.type === 'checkbox') {
+					formValues[key] = inp.checked;
+				} else {
+					formValues[key] = inp.value;
+				}
+			}
+		}
+
+		var slotChecks = [];
+		var chips = sec.querySelectorAll('.slot-opts input[type="checkbox"]');
+		for (var k = 0; k < chips.length; k++) {
+			slotChecks.push({
+				cls: chips[k].className,
+				checked: chips[k].checked
+			});
+		}
+
+		data.push({
+			id: tabId,
+			cls: cls,
+			title: tabTitle,
+			values: formValues,
+			slotChecks: slotChecks
+		});
+	}
+	return data;
+}
+
+function saveBuilds(provider) {
+	var prov = provider || getProvider();
+	var builds = serializeBuilds();
+	try {
+		localStorage.setItem('mucalc_builds_' + prov, JSON.stringify(builds));
+		localStorage.setItem('mucalc_active_provider', prov);
+	} catch (e) {
+		console.error('Failed to save builds to localStorage', e);
+	}
+}
+
+function restoreTab(tabData, index) {
+	var newTabID = tabData.id || ('tab' + index);
+	var cls = tabData.cls || 'bk';
+	var tabs = $('tabs');
+	var newTab = document.createElement('section');
+	newTab.id = newTabID;
+	newTab.setAttribute('oninput', 'refresh(event)');
+	newTab.setAttribute('onchange', 'refresh(event)');
+	newTab.innerHTML = $('model').innerHTML;
+	tabs.appendChild(newTab);
+	newTab.classList.add(cls);
+
+	// Prefix all IDs inside the new tab
+	['div','input','select','label','span','strong'].forEach(function(tag){
+		var els = newTab.getElementsByTagName(tag);
+		for (var i = 0; i < els.length; i++) {
+			if (els[i].id) els[i].id = newTabID + '_' + els[i].id;
+		}
+	});
+
+	// Inject class-specific panels
+	var p = newTabID + '_';
+	switch(cls){
+		case 'bk':
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoCombo').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
+		case 'sm':
+			$(p+'tblArma').innerHTML += $('pnlStaff').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoWiz').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
+		case 'me':
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlBuffME').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlSelf').innerHTML;
+			break;
+		case 'mg':
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblArma').innerHTML += $('pnlStaff').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlAsa').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoWiz').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
+		case 'dl':
+			$(p+'tblPontos').innerHTML += $('pnlLid').innerHTML;
+			$(p+'tblSpec').innerHTML += $('pnlCapa').innerHTML;
+			$(p+'tblArma').innerHTML += $('pnlArma').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoPhy').innerHTML;
+			$(p+'tblDanos').innerHTML += $('pnlDanoFB').innerHTML;
+			$(p+'tblBuffs').innerHTML += $('pnlBuff').innerHTML;
+			break;
+	}
+
+	// Prefix IDs injected by panels
+	['input','select','strong','span','div','label'].forEach(function(tag){
+		var els = newTab.getElementsByTagName(tag);
+		for (var i = 0; i < els.length; i++) {
+			if (els[i].id && els[i].id.indexOf(newTabID) !== 0) {
+				els[i].id = newTabID + '_' + els[i].id;
+			}
+		}
+	});
+
+	// Apply current provider configuration
+	applyProviderToTab(newTabID, getProvider());
+
+	// Restore form values
+	if (tabData.values) {
+		Object.keys(tabData.values).forEach(function(key) {
+			var el = document.getElementById(newTabID + '_' + key);
+			if (el) {
+				if (el.type === 'checkbox') {
+					el.checked = !!tabData.values[key];
+				} else {
+					el.value = tabData.values[key];
+				}
+			}
+		});
+	}
+
+	// Restore slot checkbox states if saved
+	if (Array.isArray(tabData.slotChecks)) {
+		var chips = newTab.querySelectorAll('.slot-opts input[type="checkbox"]');
+		for (var k = 0; k < chips.length && k < tabData.slotChecks.length; k++) {
+			chips[k].checked = !!tabData.slotChecks[k].checked;
+		}
+	}
+
+	// Add tab nav link
+	var nav = $('tabNav');
+	var a = document.createElement('a');
+	a.href = '#' + newTabID;
+	a.className = 'tab-link-' + cls;
+	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
+	a.textContent = tabData.title || (classNames[cls] + ' ' + (index + 1));
+	nav.appendChild(a);
+
+	var anyCheck = newTab.querySelector('.slot-opts input[type="checkbox"]');
+	if (anyCheck) {
+		syncInventoryOpts(anyCheck);
+	} else {
+		var initEl = document.getElementById(newTabID + '_iStr');
+		if (initEl) refresh({target: initEl});
+	}
+}
+
+function loadBuilds(provider) {
+	var prov = provider || getProvider();
+	var savedStr = localStorage.getItem('mucalc_builds_' + prov);
+	var tabsEl = $('tabs');
+	var navEl = $('tabNav');
+	if (!tabsEl || !navEl) return;
+
+	tabsEl.innerHTML = '';
+	navEl.innerHTML = '';
+
+	var builds = null;
+	try {
+		if (savedStr) builds = JSON.parse(savedStr);
+	} catch (e) {
+		console.error('Failed to parse saved builds', e);
+	}
+
+	if (Array.isArray(builds) && builds.length > 0) {
+		for (var i = 0; i < builds.length; i++) {
+			restoreTab(builds[i], i);
+		}
+		var firstSec = tabsEl.querySelector('section');
+		if (firstSec) {
+			window.location.hash = '#' + firstSec.id;
+			syncTabNav();
+		}
+	} else {
+		// Fresh default BK character tab
+		addTab();
 	}
 }
 
@@ -116,37 +313,40 @@ function syncInventoryOpts(el) {
 	var tabId = section.id;
 	var p = tabId + '_';
 
-	var vCount = section.querySelectorAll('.opt-vida:checked').length;
 	var dimCount = section.querySelectorAll('.opt-dim:checked').length;
-	var ddiCount = section.querySelectorAll('.opt-ddi:checked').length;
-	var dezeCount = section.querySelectorAll('.opt-deze:checked').length;
+	var refCount = section.querySelectorAll('.opt-ref:checked').length;
+	var vCount   = section.querySelectorAll('.opt-vida:checked').length;
 	var pvmCount = section.querySelectorAll('.opt-pvm:checked').length;
+	var ddiCount = section.querySelectorAll('.opt-ddi:checked').length;
 
-	var elVida = document.getElementById(p + 'iSVida');
 	var elDim = document.getElementById(p + 'iSDiminui');
-	var elDDI = document.getElementById(p + 'iSDDI');
-	var elDeze = document.getElementById(p + 'iSDeze');
+	var elRef = document.getElementById(p + 'iSRef');
+	var elVida = document.getElementById(p + 'iSVida');
 	var elPvm = document.getElementById(p + 'iSPvm');
+	var elDDI = document.getElementById(p + 'iSDDI');
 
-	if (elVida) elVida.value = vCount;
 	if (elDim) elDim.value = dimCount;
-	if (elDDI) elDDI.value = ddiCount;
-	if (elDeze) elDeze.value = dezeCount;
+	if (elRef) elRef.value = refCount;
+	if (elVida) elVida.value = vCount;
 	if (elPvm) elPvm.value = pvmCount;
+	if (elDDI) elDDI.value = ddiCount;
 
 	var sDim = document.getElementById(p + 'sumDim');
+	var sRef = document.getElementById(p + 'sumRef');
+	var sRefPct = document.getElementById(p + 'sumRefPct');
 	var sVida = document.getElementById(p + 'sumVida');
-	var sDDI = document.getElementById(p + 'sumDDI');
-	var sDeze = document.getElementById(p + 'sumDeze');
 	var sPvm = document.getElementById(p + 'sumPvm');
+	var sDDI = document.getElementById(p + 'sumDDI');
+
 	if (sDim) sDim.textContent = dimCount;
+	if (sRef) sRef.textContent = refCount;
+	if (sRefPct) sRefPct.textContent = (refCount * 5) + '%';
 	if (sVida) sVida.textContent = vCount;
-	if (sDDI) sDDI.textContent = ddiCount;
-	if (sDeze) sDeze.textContent = dezeCount;
 	if (sPvm) sPvm.textContent = pvmCount;
+	if (sDDI) sDDI.textContent = ddiCount;
 
 	// Trigger calculation refresh
-	refresh({ target: elVida || el });
+	refresh({ target: elDim || elVida || el });
 }
 
 function applySetPreset(btn, preset) {
@@ -448,14 +648,9 @@ function addTab(){
 	window.location.href = '#' + newTabID;
 	syncTabNav();
 
-	// Pre-apply full set options on newly added tab for instant complete telemetry
-	var fullBtn = $(newTabID).querySelector('.inv-btn-quick');
-	if (fullBtn) {
-		applySetPreset(fullBtn, 'full');
-	} else {
-		var initEl = document.getElementById(newTabID + '_iStr');
-		if (initEl) refresh({target: initEl});
-	}
+	// Options start disabled / unchecked
+	var initEl = document.getElementById(newTabID + '_iStr');
+	if (initEl) refresh({target: initEl});
 }
 
 function calcSample(sample, def, absasa, pdimi, pddi, buffms, gangel){
@@ -562,7 +757,9 @@ function calcDef (c, agi, defbuff, objAsa, pdeze, bdef) {
 	def += 800; //Defesa média dos sets
 	def += (objAsa.Tidfasa * objAsa.lasa);
 
-	for (var i = 0; i < pdeze; i++) {
+	// All 5 pieces (4 for MG) are always assumed +16 additional defense
+	var actualPdeze = (c === 'mg') ? 4 : 5;
+	for (var i = 0; i < actualPdeze; i++) {
 		def = (def*1.16);
 	}
 
@@ -862,7 +1059,7 @@ function refresh(e){
 	var pvida   = +$('iSVida').value;
 	var pdimi   = +$('iSDiminui').value;
 	var pddi    = +$('iSDDI').value;
-	var pdeze   = +$('iSDeze').value;
+	var pdeze   = (c === 'mg') ? 4 : 5;
 	var ppvm    = +$('iSPvm').value;
 	var bdef    = +$('iSSet').options[$('iSSet').selectedIndex].value;
 	var staff   = (c === 'sm' || c === 'mg') ? (+$('iSStaff').value) / 100 : 0;
@@ -993,10 +1190,43 @@ function refresh(e){
 	$('oPvpAr').value = objRate.pvpar;
 	var sampleEl = $('oSampleResult');
 	if (sampleEl) sampleEl.value = sample;
+
+	// Reflected damage calculator
+	var pRef = $('iSRef') ? +$('iSRef').value : 0;
+	var refPct = pRef * 5;
+	var refInEl = $('iReflectIn');
+	var refIn = refInEl ? +refInEl.value : 1000;
+	var refOut = Math.round(refIn * (refPct / 100));
+	var refOutEl = $('oReflectOut');
+	if (refOutEl) refOutEl.value = refOut;
+	var lblRefPct = $('oLblRefPct');
+	if (lblRefPct) lblRefPct.textContent = refPct + '%';
+
 	if (c === 'me'){
 		$('oBuffRed').value   = red;
 		$('oBuffGreen').value = green;
 		$('oBuffBlue').value  = blue;
 	}
 	bugcheck(c, {mp:mp, speed:speed}, prefix);
+
+	// Debounced auto-save to localStorage
+	if (window._saveBuildsTimeout) clearTimeout(window._saveBuildsTimeout);
+	window._saveBuildsTimeout = setTimeout(function() {
+		saveBuilds();
+	}, 300);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+	initProviderSession();
+	syncTabNav();
+});
+
+document.addEventListener('visibilitychange', function() {
+	if (document.visibilityState === 'hidden') {
+		saveBuilds();
+	}
+});
+
+window.addEventListener('beforeunload', function() {
+	saveBuilds();
+});
