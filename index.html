@@ -241,6 +241,35 @@
 				</div>
 			</div>
 
+			<!-- Simulator (Redistributed to Col 1 to eliminate dead space) -->
+			<div class="card">
+				<h3>Simulador de Dano</h3>
+				<div class="sim-row">
+					<div class="sim-input-box">
+						<label>Planejado</label>
+						<input type="number" min="0" id="iSampledmg" value="0">
+					</div>
+					<span class="sim-arrow">➔</span>
+					<div class="sim-output-box">
+						<label>Recebido</label>
+						<input id="oSampleResult" type="text" disabled value="0">
+					</div>
+				</div>
+
+				<!-- Dano Refletido Calculator -->
+				<div class="sim-row" style="margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--card-border);">
+					<div class="sim-input-box">
+						<label>Dano Recebido</label>
+						<input type="number" min="0" id="iReflectIn" value="1000" placeholder="1000" title="Dano Bruto Recebido para Calcular Reflete">
+					</div>
+					<span class="sim-arrow">➔</span>
+					<div class="sim-output-box">
+						<label>Refletido (<span id="oLblRefPct">0%</span>)</label>
+						<input id="oReflectOut" type="text" disabled value="0">
+					</div>
+				</div>
+			</div>
+
 		</div><!-- end col 1 -->
 
 		<!-- COLUMN 2: VISUAL INVENTORY & GEAR -->
@@ -464,35 +493,6 @@
 			<div class="card" id="tblDanos">
 				<h3>Dano</h3>
 				<!-- damage panels injected here -->
-			</div>
-
-			<!-- Simulator -->
-			<div class="card">
-				<h3>Simulador de Dano</h3>
-				<div class="sim-row">
-					<div class="sim-input-box">
-						<label>Planejado</label>
-						<input type="number" min="0" id="iSampledmg" value="0">
-					</div>
-					<span class="sim-arrow">➔</span>
-					<div class="sim-output-box">
-						<label>Recebido</label>
-						<input id="oSampleResult" type="text" disabled value="0">
-					</div>
-				</div>
-
-				<!-- Dano Refletido Calculator -->
-				<div class="sim-row" style="margin-top: 5px; padding-top: 5px; border-top: 1px solid var(--card-border);">
-					<div class="sim-input-box">
-						<label>Dano Recebido</label>
-						<input type="number" min="0" id="iReflectIn" value="1000" placeholder="1000" title="Dano Bruto Recebido para Calcular Reflete">
-					</div>
-					<span class="sim-arrow">➔</span>
-					<div class="sim-output-box">
-						<label>Refletido (<span id="oLblRefPct">0%</span>)</label>
-						<input id="oReflectOut" type="text" disabled value="0">
-					</div>
-				</div>
 			</div>
 
 		</div><!-- end col 3 -->
