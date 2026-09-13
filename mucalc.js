@@ -228,6 +228,93 @@ function toggleOffhandType(el) {
 	refresh({ target: el });
 }
 
+function startRenameTab(tabLink) {
+	if (!tabLink) return;
+	var span = tabLink.querySelector('.tab-title-text');
+	if (!span) return;
+	var editBtn = tabLink.querySelector('.tab-rename-btn');
+	var oldName = span.textContent.trim();
+
+	if (tabLink.querySelector('.tab-rename-input')) return;
+
+	var input = document.createElement('input');
+	input.type = 'text';
+	input.className = 'tab-rename-input';
+	input.value = oldName;
+	input.maxLength = 16;
+
+	span.style.display = 'none';
+	if (editBtn) editBtn.style.display = 'none';
+	tabLink.insertBefore(input, span);
+	input.focus();
+	input.select();
+
+	var finished = false;
+	function finishRename() {
+		if (finished) return;
+		finished = true;
+		var newName = input.value.trim() || oldName;
+		span.textContent = newName;
+		span.style.display = '';
+		if (editBtn) editBtn.style.display = '';
+		if (input.parentNode) input.parentNode.removeChild(input);
+		saveBuilds();
+	}
+
+	input.addEventListener('blur', finishRename);
+	input.addEventListener('keydown', function(e) {
+		if (e.key === 'Enter') {
+			input.blur();
+		} else if (e.key === 'Escape') {
+			input.value = oldName;
+			input.blur();
+		}
+	});
+}
+
+function createTabNavLink(tabId, cls, labelText) {
+	var a = document.createElement('a');
+	a.href = '#' + tabId;
+	a.className = 'tab-link-' + cls;
+
+	var span = document.createElement('span');
+	span.className = 'tab-title-text';
+	span.textContent = labelText;
+	a.appendChild(span);
+
+	var editBtn = document.createElement('button');
+	editBtn.type = 'button';
+	editBtn.className = 'tab-rename-btn';
+	editBtn.title = 'Renomear personagem';
+	editBtn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>';
+	editBtn.addEventListener('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		startRenameTab(a);
+	});
+	a.appendChild(editBtn);
+
+	a.addEventListener('dblclick', function(e) {
+		e.preventDefault();
+		startRenameTab(a);
+	});
+
+	var touchTimer = null;
+	a.addEventListener('touchstart', function(e) {
+		touchTimer = setTimeout(function() {
+			startRenameTab(a);
+		}, 500);
+	}, { passive: true });
+	a.addEventListener('touchend', function() {
+		if (touchTimer) clearTimeout(touchTimer);
+	}, { passive: true });
+	a.addEventListener('touchmove', function() {
+		if (touchTimer) clearTimeout(touchTimer);
+	}, { passive: true });
+
+	return a;
+}
+
 function serializeBuilds() {
 	var tabs = document.getElementById('tabs');
 	if (!tabs) return [];
@@ -238,7 +325,11 @@ function serializeBuilds() {
 		var tabId = sec.id;
 		var cls = sec.className.trim().split(' ')[0];
 		var navLink = document.querySelector('#tabNav a[href="#' + tabId + '"]');
-		var tabTitle = navLink ? navLink.textContent : '';
+		var tabTitle = '';
+		if (navLink) {
+			var span = navLink.querySelector('.tab-title-text');
+			tabTitle = span ? span.textContent.trim() : navLink.textContent.trim();
+		}
 
 		var formValues = {};
 		var inputs = sec.querySelectorAll('input, select');
@@ -385,11 +476,8 @@ function restoreTab(tabData, index) {
 
 	// Add tab nav link
 	var nav = $('tabNav');
-	var a = document.createElement('a');
-	a.href = '#' + newTabID;
-	a.className = 'tab-link-' + cls;
 	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
-	a.textContent = tabData.title || (classNames[cls] + ' ' + (index + 1));
+	var a = createTabNavLink(newTabID, cls, tabData.title || (classNames[cls] + ' ' + (index + 1)));
 	nav.appendChild(a);
 
 	var anyCheck = newTab.querySelector('.slot-opts input[type="checkbox"]');
@@ -830,11 +918,8 @@ function addTab(targetClassId){
 
 	// Add tab nav link
 	var nav = $('tabNav');
-	var a = document.createElement('a');
-	a.href = '#' + newTabID;
-	a.className = 'tab-link-' + cls;
 	var classNames = {bk:'BK', sm:'SM', me:'ME', mg:'MG', dl:'DL'};
-	a.textContent = classNames[cls] + ' ' + (existingSections + 1);
+	var a = createTabNavLink(newTabID, cls, classNames[cls] + ' ' + (existingSections + 1));
 	nav.appendChild(a);
 
 	window.location.href = '#' + newTabID;

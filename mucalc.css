@@ -509,8 +509,10 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
 .header-tab-dock::-webkit-scrollbar { display: none; }
 
 .header-tab-dock a {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  gap: 5px;
   padding: 4px 10px;
   border-radius: 6px;
   text-decoration: none;
@@ -522,6 +524,54 @@ input, select, .points-compact-val, .dmg-cell input, .telemetry-cell input {
   border: 1px solid rgba(255, 255, 255, 0.07);
   transition: all 0.15s ease;
   white-space: nowrap;
+}
+
+.tab-title-text {
+  user-select: none;
+}
+
+.tab-rename-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 14px;
+  height: 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  line-height: 1;
+}
+
+.header-tab-dock a:hover .tab-rename-btn,
+.header-tab-dock a.active .tab-rename-btn {
+  opacity: 0.75;
+  pointer-events: auto;
+}
+
+.tab-rename-btn:hover {
+  opacity: 1 !important;
+  color: #ffffff;
+  transform: scale(1.2);
+}
+
+.tab-rename-input {
+  width: 72px !important;
+  height: 22px !important;
+  padding: 1px 4px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  border: 1px solid var(--accent) !important;
+  border-radius: 4px !important;
+  color: #ffffff !important;
+  text-align: center;
+  outline: none !important;
+  box-shadow: 0 0 8px var(--accent-glow) !important;
 }
 
 .header-tab-dock a:hover {
@@ -1122,7 +1172,7 @@ article.tabs section:target { display: block; }
   flex-direction: column;
   justify-content: flex-start;
   gap: 4px;
-  min-height: 165px;
+  min-height: 145px;
   box-sizing: border-box;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
@@ -1287,6 +1337,56 @@ article.tabs section:target { display: block; }
 .slot-opt-chip:hover span {
   border-color: rgba(255, 255, 255, 0.18);
   color: var(--text);
+}
+
+/* ── 2 Rows x 2 Cols Grid Layout (Mimicking Pendant) ── */
+.opts-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  width: 100%;
+}
+
+.opts-grid-2x2 .slot-opt-chip {
+  width: 100%;
+  display: block;
+}
+
+.opts-grid-2x2 .slot-opt-chip span {
+  width: 100%;
+  display: block;
+  text-align: center;
+  padding: 3px 2px;
+  font-size: 9.5px;
+  line-height: 1;
+  border-radius: 3px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slot-opts-structured {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.slot-opts-structured > .slot-opt-chip {
+  width: 100%;
+  display: block;
+}
+
+.slot-opts-structured > .slot-opt-chip span {
+  width: 100%;
+  display: block;
+  text-align: center;
+  padding: 3px 2px;
+  font-size: 10px;
+  line-height: 1;
+  border-radius: 3px;
+  box-sizing: border-box;
 }
 
 /* ── VERTICAL OPTIONS LAYOUT & COLOR ENFORCEMENT ── */

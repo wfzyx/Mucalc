@@ -114,13 +114,15 @@
 			<span class="weap-dash">-</span>
 			<input value="0" min="0" id="iSWpmax" type="number" placeholder="Máx" title="Dano Físico Máximo" oninput="refresh(event)">
 		</div>
-		<div class="slot-opts slot-opts-vertical" style="margin-top: 4px;">
+		<div class="slot-opts-structured" style="margin-top: 4px;">
 			<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +25% (Sorte)"><input id="iSCWpLuck" type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"/><span>Sorte</span></label>
 			<div class="slot-opts-divider"></div>
-			<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCWpExc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
-			<label class="slot-opt-chip chip-wp" title="Aumento de Dano +2%"><input id="iSCWp2" type="checkbox" onchange="refresh(event)"/><span>Dano 2%</span></label>
-			<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCWpLvl20" type="checkbox" onchange="refresh(event)"/><span>Dano lvl/20</span></label>
-			<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCWpSpeed" type="checkbox" onchange="refresh(event)"/><span>Velo +7</span></label>
+			<div class="opts-grid-2x2">
+				<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCWpExc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
+				<label class="slot-opt-chip chip-wp" title="Aumento de Dano +2%"><input id="iSCWp2" type="checkbox" onchange="refresh(event)"/><span>Dano 2%</span></label>
+				<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCWpLvl20" type="checkbox" onchange="refresh(event)"/><span>Lvl/20</span></label>
+				<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCWpSpeed" type="checkbox" onchange="refresh(event)"/><span>Velo +7</span></label>
+			</div>
 		</div>
 	</div>
 
@@ -130,13 +132,15 @@
 			<input value="0" min="0" id="iSStaff" type="number" placeholder="0" title="Dano Mágico (%)" oninput="refresh(event)">
 			<span class="weap-unit">% Dano Mágico</span>
 		</div>
-		<div class="slot-opts slot-opts-vertical" style="margin-top: 4px;">
+		<div class="slot-opts-structured" style="margin-top: 4px;">
 			<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +25% (Sorte)"><input id="iSCStaffLuck" type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"/><span>Sorte</span></label>
 			<div class="slot-opts-divider"></div>
-			<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCStaffExc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
-			<label class="slot-opt-chip chip-wp" title="Aumento de Dano Mágico +2%"><input id="iSCStaff2" type="checkbox" onchange="refresh(event)"/><span>Dano 2%</span></label>
-			<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCStaffLvl20" type="checkbox" onchange="refresh(event)"/><span>Dano lvl/20</span></label>
-			<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCStaffSpeed" type="checkbox" onchange="refresh(event)"/><span>Velo +7</span></label>
+			<div class="opts-grid-2x2">
+				<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCStaffExc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
+				<label class="slot-opt-chip chip-wp" title="Aumento de Dano Mágico +2%"><input id="iSCStaff2" type="checkbox" onchange="refresh(event)"/><span>Dano 2%</span></label>
+				<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCStaffLvl20" type="checkbox" onchange="refresh(event)"/><span>Lvl/20</span></label>
+				<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCStaffSpeed" type="checkbox" onchange="refresh(event)"/><span>Velo +7</span></label>
+			</div>
 		</div>
 	</div>
 
@@ -343,7 +347,7 @@
 							<div class="pendant-opts-list">
 								<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input type="checkbox" id="iSCPenExc" onchange="refresh(event)"><span>Exc 10%</span></label>
 								<label class="slot-opt-chip chip-wp" title="Aumento de Dano +2%"><input type="checkbox" id="iSCPen2" onchange="refresh(event)"><span>Dano 2%</span></label>
-								<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input type="checkbox" id="iSCPenLvl20" onchange="refresh(event)"><span>Dano lvl/20</span></label>
+								<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input type="checkbox" id="iSCPenLvl20" onchange="refresh(event)"><span>Lvl/20</span></label>
 								<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input type="checkbox" id="iSCPenSpeed" onchange="refresh(event)"><span>Velo +7</span></label>
 							</div>
 						</div>
@@ -354,7 +358,7 @@
 						<div class="accessory-row-rings">
 							<div class="accessory-subring">
 								<div class="slot-header"><span class="slot-title">Anel 1</span></div>
-								<div class="slot-opts slot-opts-vertical">
+								<div class="opts-grid-2x2">
 									<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
 									<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
 									<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
@@ -364,7 +368,7 @@
 
 							<div class="accessory-subring">
 								<div class="slot-header"><span class="slot-title">Anel 2</span></div>
-								<div class="slot-opts slot-opts-vertical">
+								<div class="opts-grid-2x2">
 									<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
 									<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
 									<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
@@ -377,13 +381,15 @@
 					<!-- Row 1, Col 2: Helm -->
 					<div class="inv-slot slot-helm">
 						<div class="slot-header"><span class="slot-title">Capacete</span></div>
-						<div class="slot-opts slot-opts-vertical">
+						<div class="slot-opts-structured">
 							<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +5% (Sorte)"><input type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"><span>Sorte</span></label>
 							<div class="slot-opts-divider"></div>
-							<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
-							<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
-							<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
-							<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							<div class="opts-grid-2x2">
+								<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+								<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
+								<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+								<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							</div>
 							<div class="slot-opts-divider"></div>
 							<label class="slot-opt-chip chip-ddi" title="Damage Decrease Increment +7%"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
 						</div>
@@ -438,13 +444,15 @@
 					<!-- Row 2, Col 2: Armor -->
 					<div class="inv-slot slot-armor">
 						<div class="slot-header"><span class="slot-title">Peitoral</span></div>
-						<div class="slot-opts slot-opts-vertical">
+						<div class="slot-opts-structured">
 							<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +5% (Sorte)"><input type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"><span>Sorte</span></label>
 							<div class="slot-opts-divider"></div>
-							<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
-							<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
-							<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
-							<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							<div class="opts-grid-2x2">
+								<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+								<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
+								<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+								<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							</div>
 							<div class="slot-opts-divider"></div>
 							<label class="slot-opt-chip chip-ddi" title="Damage Decrease Increment +7%"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
 						</div>
@@ -461,13 +469,15 @@
 						</div>
 
 						<!-- Escudo Mode -->
-						<div class="slot-opts slot-opts-vertical offhand-shield-opts" id="pnlOffhandShield">
+						<div class="slot-opts-structured offhand-shield-opts" id="pnlOffhandShield">
 							<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +5% (Sorte)"><input type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"><span>Sorte</span></label>
 							<div class="slot-opts-divider"></div>
-							<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
-							<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
-							<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
-							<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							<div class="opts-grid-2x2">
+								<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+								<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
+								<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+								<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							</div>
 							<div class="slot-opts-divider"></div>
 							<label class="slot-opt-chip chip-ddi" title="Damage Decrease Increment +7%"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
 						</div>
@@ -479,13 +489,15 @@
 								<span class="weap-dash">-</span>
 								<input value="0" min="0" id="iSWp2max" type="number" placeholder="Máx" title="Dano Físico Secundário Máximo" oninput="refresh(event)">
 							</div>
-							<div class="slot-opts slot-opts-vertical" style="margin-top: 4px;">
+							<div class="slot-opts-structured" style="margin-top: 4px;">
 								<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +25% (Sorte)"><input id="iSCWp2Luck" type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"/><span>Sorte</span></label>
 								<div class="slot-opts-divider"></div>
-								<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCWp2Exc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
-								<label class="slot-opt-chip chip-wp" title="Aumento de Dano Secundário +2%"><input id="iSCWp2b" type="checkbox" onchange="refresh(event)"/><span>Dano 2%</span></label>
-								<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCWp2Lvl20" type="checkbox" onchange="refresh(event)"/><span>Dano lvl/20</span></label>
-								<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCWp2Speed" type="checkbox" onchange="refresh(event)"/><span>Velo +7</span></label>
+								<div class="opts-grid-2x2">
+									<label class="slot-opt-chip chip-wp" title="Taxa Dano Excelente +10%"><input id="iSCWp2Exc" type="checkbox" onchange="refresh(event)"/><span>Exc 10%</span></label>
+									<label class="slot-opt-chip chip-wp" title="Aumento de Dano Secundário +2%"><input id="iSCWp2b" type="checkbox" onchange="refresh(event)"/><span>Dano 2%</span></label>
+									<label class="slot-opt-chip chip-wp" title="Dano Adicional Nível / 20"><input id="iSCWp2Lvl20" type="checkbox" onchange="refresh(event)"/><span>Lvl/20</span></label>
+									<label class="slot-opt-chip chip-wp" title="Velocidade de Ataque +7"><input id="iSCWp2Speed" type="checkbox" onchange="refresh(event)"/><span>Velo +7</span></label>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -493,13 +505,15 @@
 					<!-- Row 3, Col 1: Gloves -->
 					<div class="inv-slot slot-gloves">
 						<div class="slot-header"><span class="slot-title">Luvas</span></div>
-						<div class="slot-opts slot-opts-vertical">
+						<div class="slot-opts-structured">
 							<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +5% (Sorte)"><input type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"><span>Sorte</span></label>
 							<div class="slot-opts-divider"></div>
-							<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
-							<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
-							<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
-							<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							<div class="opts-grid-2x2">
+								<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+								<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
+								<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+								<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							</div>
 							<div class="slot-opts-divider"></div>
 							<label class="slot-opt-chip chip-ddi" title="Damage Decrease Increment +7%"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
 						</div>
@@ -508,13 +522,15 @@
 					<!-- Row 3, Col 2: Pants -->
 					<div class="inv-slot slot-pants">
 						<div class="slot-header"><span class="slot-title">Calças</span></div>
-						<div class="slot-opts slot-opts-vertical">
+						<div class="slot-opts-structured">
 							<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +5% (Sorte)"><input type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"><span>Sorte</span></label>
 							<div class="slot-opts-divider"></div>
-							<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
-							<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
-							<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
-							<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							<div class="opts-grid-2x2">
+								<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+								<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
+								<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+								<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							</div>
 							<div class="slot-opts-divider"></div>
 							<label class="slot-opt-chip chip-ddi" title="Damage Decrease Increment +7%"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
 						</div>
@@ -523,13 +539,15 @@
 					<!-- Row 3, Col 3: Boots -->
 					<div class="inv-slot slot-boots">
 						<div class="slot-header"><span class="slot-title">Botas</span></div>
-						<div class="slot-opts slot-opts-vertical">
+						<div class="slot-opts-structured">
 							<label class="slot-opt-chip chip-sorte" title="Taxa Dano Crítico +5% (Sorte)"><input type="checkbox" class="opt-sorte" onchange="syncInventoryOpts(this)"><span>Sorte</span></label>
 							<div class="slot-opts-divider"></div>
-							<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
-							<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
-							<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
-							<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							<div class="opts-grid-2x2">
+								<label class="slot-opt-chip chip-dim" title="Diminui Dano +4%"><input type="checkbox" class="opt-dim" onchange="syncInventoryOpts(this)"><span>Dim</span></label>
+								<label class="slot-opt-chip chip-ref" title="Reflete Dano +5%"><input type="checkbox" class="opt-ref" onchange="syncInventoryOpts(this)"><span>Ref</span></label>
+								<label class="slot-opt-chip chip-vida" title="Aumento de Vida +4%"><input type="checkbox" class="opt-vida" onchange="syncInventoryOpts(this)"><span>Vida</span></label>
+								<label class="slot-opt-chip chip-pvm" title="Taxa de Defesa PvM +10%"><input type="checkbox" class="opt-pvm" onchange="syncInventoryOpts(this)"><span>Pvm</span></label>
+							</div>
 							<div class="slot-opts-divider"></div>
 							<label class="slot-opt-chip chip-ddi" title="Damage Decrease Increment +7%"><input type="checkbox" class="opt-ddi" onchange="syncInventoryOpts(this)"><span>DDI</span></label>
 						</div>
