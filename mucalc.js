@@ -17,9 +17,12 @@ function initProviderSession() {
 	}
 }
 
-function openProviderOverlay() {
+var pendingProvider = null;
+
+function openProviderOverlay(step) {
 	var overlay = document.getElementById('providerOverlay');
 	if (overlay) overlay.style.display = 'flex';
+	goToProviderStep(step || 1);
 }
 
 function closeProviderOverlay() {
@@ -27,18 +30,71 @@ function closeProviderOverlay() {
 	if (overlay) overlay.style.display = 'none';
 }
 
+function goToProviderStep(step) {
+	var s1 = document.getElementById('providerStep1');
+	var s2 = document.getElementById('providerStep2');
+	if (!s1 || !s2) return;
+	if (step === 2) {
+		s1.style.display = 'none';
+		s2.style.display = 'block';
+		var prov = pendingProvider || getProvider();
+		var lbl = document.getElementById('lblStep2Server');
+		if (lbl) {
+			lbl.textContent = prov === 'muren' ? 'Land of Muren' : 'MUCABrasil';
+			lbl.style.color = prov === 'muren' ? '#38bdf8' : '#ef4444';
+		}
+	} else {
+		s1.style.display = 'block';
+		s2.style.display = 'none';
+	}
+}
+
 function chooseSessionProvider(prov) {
 	var oldProv = getProvider();
 	saveBuilds(oldProv);
 
+	pendingProvider = prov;
+
+	// Check if this provider already has saved builds
+	var savedStr = localStorage.getItem('mucalc_builds_' + prov);
+	var builds = null;
+	try {
+		if (savedStr) builds = JSON.parse(savedStr);
+	} catch (e) {}
+
+	if (Array.isArray(builds) && builds.length > 0) {
+		// Server has saved builds: activate and load
+		applySelectedProvider(prov);
+		closeProviderOverlay();
+		loadBuilds(prov);
+	} else {
+		// Server has 0 builds: transition to Step 2 so user chooses starting class!
+		goToProviderStep(2);
+	}
+}
+
+function selectInitialClass(classId) {
+	var prov = pendingProvider || getProvider();
+	applySelectedProvider(prov);
+	closeProviderOverlay();
+
+	var tabsEl = document.getElementById('tabs');
+	var navEl = document.getElementById('tabNav');
+	if (tabsEl) tabsEl.innerHTML = '';
+	if (navEl) navEl.innerHTML = '';
+
+	var classSelect = document.getElementById('classes');
+	if (classSelect) classSelect.value = classId;
+
+	addTab(classId);
+	saveBuilds(prov);
+}
+
+function applySelectedProvider(prov) {
 	window.currentProvider = prov;
 	sessionStorage.setItem('mucalc_session_provider', prov);
 	localStorage.setItem('mucalc_provider', prov);
-	closeProviderOverlay();
 	updateProviderUI();
-
-	// Load saved builds for the selected provider
-	loadBuilds(prov);
 }
 
 function setProvider(prov) {
@@ -93,7 +149,7 @@ function closeTab(tabId) {
 		syncTabNav();
 	} else {
 		window.location.hash = '';
-		openProviderOverlay();
+		openProviderOverlay(2);
 	}
 	saveBuilds();
 }
@@ -346,8 +402,9 @@ function loadBuilds(provider) {
 			syncTabNav();
 		}
 	} else {
-		// Fresh default BK character tab
-		addTab();
+		// 0 builds -> open provider overlay at step 2 to choose starting class
+		pendingProvider = prov;
+		openProviderOverlay(2);
 	}
 }
 
@@ -413,31 +470,36 @@ function syncInventoryOpts(el) {
 	var tabId = section.id;
 	var p = tabId + '_';
 
-	var dimCount = section.querySelectorAll('.opt-dim:checked').length;
-	var refCount = section.querySelectorAll('.opt-ref:checked').length;
-	var vCount   = section.querySelectorAll('.opt-vida:checked').length;
-	var pvmCount = section.querySelectorAll('.opt-pvm:checked').length;
-	var ddiCount = section.querySelectorAll('.opt-ddi:checked').length;
+	var sorteCount = section.querySelectorAll('.opt-sorte:checked').length;
+	var dimCount   = section.querySelectorAll('.opt-dim:checked').length;
+	var refCount   = section.querySelectorAll('.opt-ref:checked').length;
+	var vCount     = section.querySelectorAll('.opt-vida:checked').length;
+	var pvmCount   = section.querySelectorAll('.opt-pvm:checked').length;
+	var ddiCount   = section.querySelectorAll('.opt-ddi:checked').length;
 
-	var elDim = document.getElementById(p + 'iSDiminui');
-	var elRef = document.getElementById(p + 'iSRef');
-	var elVida = document.getElementById(p + 'iSVida');
-	var elPvm = document.getElementById(p + 'iSPvm');
-	var elDDI = document.getElementById(p + 'iSDDI');
+	var elSorte = document.getElementById(p + 'iSSorte');
+	var elDim   = document.getElementById(p + 'iSDiminui');
+	var elRef   = document.getElementById(p + 'iSRef');
+	var elVida  = document.getElementById(p + 'iSVida');
+	var elPvm   = document.getElementById(p + 'iSPvm');
+	var elDDI   = document.getElementById(p + 'iSDDI');
 
+	if (elSorte) elSorte.value = sorteCount;
 	if (elDim) elDim.value = dimCount;
 	if (elRef) elRef.value = refCount;
 	if (elVida) elVida.value = vCount;
 	if (elPvm) elPvm.value = pvmCount;
 	if (elDDI) elDDI.value = ddiCount;
 
-	var sDim = document.getElementById(p + 'sumDim');
-	var sRef = document.getElementById(p + 'sumRef');
+	var sSorte  = document.getElementById(p + 'sumSorte');
+	var sDim    = document.getElementById(p + 'sumDim');
+	var sRef    = document.getElementById(p + 'sumRef');
 	var sRefPct = document.getElementById(p + 'sumRefPct');
-	var sVida = document.getElementById(p + 'sumVida');
-	var sPvm = document.getElementById(p + 'sumPvm');
-	var sDDI = document.getElementById(p + 'sumDDI');
+	var sVida   = document.getElementById(p + 'sumVida');
+	var sPvm    = document.getElementById(p + 'sumPvm');
+	var sDDI    = document.getElementById(p + 'sumDDI');
 
+	if (sSorte) sSorte.textContent = sorteCount;
 	if (sDim) sDim.textContent = dimCount;
 	if (sRef) sRef.textContent = refCount;
 	if (sRefPct) sRefPct.textContent = (refCount * 5) + '%';
@@ -642,7 +704,7 @@ function bugcheck(c, objBug, prefix){
 
 }
 
-function addTab(){
+function addTab(targetClassId){
 	var existingSections = $('tabs').getElementsByTagName('section').length;
 	if (existingSections >= 6) return;
 	var newTabID = 'tab' + existingSections;
@@ -654,7 +716,11 @@ function addTab(){
 	newTab.innerHTML = $('model').innerHTML;
 	tabs.appendChild(newTab);
 
-	var op = $('classes').options[$('classes').selectedIndex];
+	var classSelect = $('classes');
+	if (targetClassId && classSelect) {
+		classSelect.value = targetClassId;
+	}
+	var op = classSelect.options[classSelect.selectedIndex];
 	var classMap = {1:'bk', 2:'sm', 3:'me', 4:'mg', 5:'dl'};
 	var cls = classMap[+op.value];
 	if (!cls) { alert('Classe não implementada'); tabs.removeChild(newTab); return; }
@@ -1349,12 +1415,10 @@ function refresh(e){
 	var sampleEl = $('oSampleResult');
 	if (sampleEl) sampleEl.value = sample;
 
-	// Reflected damage calculator
+	// Reflected damage calculator derived directly from Recebido (sample)
 	var pRef = $('iSRef') ? +$('iSRef').value : 0;
 	var refPct = pRef * 5;
-	var refInEl = $('iReflectIn');
-	var refIn = refInEl ? +refInEl.value : 1000;
-	var refOut = Math.round(refIn * (refPct / 100));
+	var refOut = Math.round(sample * (refPct / 100));
 	var refOutEl = $('oReflectOut');
 	if (refOutEl) refOutEl.value = refOut;
 	var lblRefPct = $('oLblRefPct');
