@@ -282,7 +282,7 @@
 						<label>Resets</label>
 						<div class="input-with-sub">
 							<input id="iResets" value="0" min="0" max="500" type="number">
-							<label class="check-label" id="lblVip"><input id="iSCVip" type="checkbox"/>VIP</label>
+							<label class="check-label check-label-vip" id="lblVip"><input id="iSCVip" type="checkbox"/><span class="vip-text">VIP</span></label>
 						</div>
 					</div>
 					<div class="form-item">
@@ -309,8 +309,19 @@
 				</div>
 			</div>
 
+			<!-- Status Base (Vitals) -->
+			<div class="card card-status-base">
+				<h3>Status Base</h3>
+				<div class="vitals-grid">
+					<div class="vital-cell vital-hp"><span class="vital-tag">HP</span><input id="oHP" type="text" disabled></div>
+					<div class="vital-cell vital-mp"><span class="vital-tag">MP</span><input id="oMP" type="text" disabled></div>
+					<div class="vital-cell vital-sd"><span class="vital-tag">SD</span><input id="oSD" type="text" disabled></div>
+					<div class="vital-cell vital-ag"><span class="vital-tag">AG</span><input id="oAG" type="text" disabled></div>
+				</div>
+			</div>
+
 			<!-- Buffs Card -->
-			<div class="card">
+			<div class="card card-buffs">
 				<h3>Buffs</h3>
 				<div class="check-row compact-checks" id="tblBuffs">
 					<label class="check-label"><input id="iSCMS" type="checkbox"/>MS Full (70%)</label>
@@ -555,51 +566,20 @@
 
 				</div><!-- end paperdoll grid -->
 
-				<!-- Set Level & Options Summary Bar -->
-				<div class="inv-summary-bar">
-					<div class="set-lvl-picker">
-						<label>Nível Set</label>
-						<select id="iSSet">
-							<option value="20" selected>+13</option>
-							<option value="15">+12</option>
-							<option value="10">+11</option>
-							<option value="5">+10</option>
-							<option value="0">+0~9</option>
-						</select>
-					</div>
-					<div class="inv-opt-tallies">
-						<span class="tally-item" title="Taxa Dano Crítico (Sorte)">SORTE: <strong id="sumSorte">0</strong></span>
-						<span class="tally-item" title="Diminui Dano 4%">DIM: <strong id="sumDim">0</strong></span>
-						<span class="tally-item" title="Reflete Dano 5%">REF: <strong id="sumRef">0</strong> (<span id="sumRefPct">0%</span>)</span>
-						<span class="tally-item" title="Vida 4%">VID: <strong id="sumVida">0</strong></span>
-						<span class="tally-item" title="PvM Def Rate 10%">PVM: <strong id="sumPvm">0</strong></span>
-						<span class="tally-item" title="DDI 7%">DDI: <strong id="sumDDI">0</strong></span>
-					</div>
-					<!-- Hidden values read by calculations -->
-					<input type="hidden" id="iSSorte" value="0">
-					<input type="hidden" id="iSDiminui" value="0">
-					<input type="hidden" id="iSRef" value="0">
-					<input type="hidden" id="iSVida" value="0">
-					<input type="hidden" id="iSPvm" value="0">
-					<input type="hidden" id="iSDDI" value="0">
-				</div>
+				<!-- Hidden values read by calculations (Set assumed +13) -->
+				<input type="hidden" id="iSSet" value="20">
+				<input type="hidden" id="iSSorte" value="0">
+				<input type="hidden" id="iSDiminui" value="0">
+				<input type="hidden" id="iSRef" value="0">
+				<input type="hidden" id="iSVida" value="0">
+				<input type="hidden" id="iSPvm" value="0">
+				<input type="hidden" id="iSDDI" value="0">
 			</div>
 
 		</div><!-- end col 2 -->
 
 		<!-- COLUMN 3: COMBAT TELEMETRY & SIMULATOR -->
 		<div class="pane-col">
-
-			<!-- Status Base (Vitals) -->
-			<div class="card">
-				<h3>Status Base</h3>
-				<div class="vitals-grid">
-					<div class="vital-cell vital-hp"><span class="vital-tag">HP</span><input id="oHP" type="text" disabled></div>
-					<div class="vital-cell vital-mp"><span class="vital-tag">MP</span><input id="oMP" type="text" disabled></div>
-					<div class="vital-cell vital-sd"><span class="vital-tag">SD</span><input id="oSD" type="text" disabled></div>
-					<div class="vital-cell vital-ag"><span class="vital-tag">AG</span><input id="oAG" type="text" disabled></div>
-				</div>
-			</div>
 
 			<!-- Advanced Status -->
 			<div class="card">

@@ -1343,7 +1343,8 @@ function refresh(e){
 	var pddi    = +$('iSDDI').value;
 	var pdeze   = (c === 'mg') ? 4 : 5;
 	var ppvm    = +$('iSPvm').value;
-	var bdef    = +$('iSSet').options[$('iSSet').selectedIndex].value;
+	var setEl   = $('iSSet');
+	var bdef    = setEl ? (setEl.options ? +setEl.options[setEl.selectedIndex].value : +setEl.value || 20) : 20;
 	var staff   = (c === 'sm' || c === 'mg') ? (+$('iSStaff').value) / 100 : 0;
 
 	var asaEl = $('iSTAsa'), capaEl = $('iSTCapa');
