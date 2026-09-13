@@ -154,6 +154,30 @@ function closeTab(tabId) {
 	saveBuilds();
 }
 
+function applyDualWieldRules(section, cls) {
+	var canDualWield = (cls === 'bk' || cls === 'mg');
+	var p = section.id + '_';
+	var selectEl = document.getElementById(p + 'iSOffhandType');
+	var titleEl = document.getElementById(p + 'lblOffhandTitle');
+	var pnlShield = document.getElementById(p + 'pnlOffhandShield');
+	var pnlWeap = document.getElementById(p + 'pnlOffhandWeap');
+
+	if (!canDualWield) {
+		if (selectEl) {
+			selectEl.value = 'shield';
+			selectEl.style.display = 'none';
+		}
+		if (titleEl) {
+			titleEl.style.display = 'inline-block';
+		}
+		if (pnlShield) pnlShield.style.display = 'flex';
+		if (pnlWeap) pnlWeap.style.display = 'none';
+	} else {
+		if (selectEl) selectEl.style.display = 'inline-block';
+		if (titleEl) titleEl.style.display = 'none';
+	}
+}
+
 function toggleTwoHanded(el) {
 	var section = el.closest ? el.closest('section') : (function() {
 		var node = el;
@@ -356,6 +380,8 @@ function restoreTab(tabData, index) {
 			chips[k].checked = !!tabData.slotChecks[k].checked;
 		}
 	}
+
+	applyDualWieldRules(newTab, cls);
 
 	// Add tab nav link
 	var nav = $('tabNav');
@@ -817,6 +843,8 @@ function addTab(targetClassId){
 	// Options start disabled / unchecked
 	var initEl = document.getElementById(newTabID + '_iStr');
 	if (initEl) refresh({target: initEl});
+
+	applyDualWieldRules(newTab, cls);
 }
 
 function calcSample(sample, def, absasa, pdimi, pddi, buffms, gangel){

@@ -1058,24 +1058,81 @@ article.tabs section:target { display: block; }
   border-color: var(--slot-border-hover);
 }
 
-.weap-opts-grid {
+/* ── Accessory Card (Pendant + Rings) Layout ── */
+.slot-accessories {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.accessory-row-pendant {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.pendant-opts-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2px;
   width: 100%;
-  margin-top: 3px;
 }
 
-.weap-opts-grid .slot-opt-chip {
-  display: flex;
-  justify-content: center;
-}
-
-.weap-opts-grid .slot-opt-chip span {
+.pendant-opts-list .slot-opt-chip {
   width: 100%;
+}
+
+.pendant-opts-list .slot-opt-chip span {
+  width: 100%;
+  display: block;
   text-align: center;
-  font-size: 8.5px;
-  padding: 2px 1px;
+  padding: 2.5px 1px;
+  font-size: 9px;
+  line-height: 1;
+}
+
+.accessory-row-rings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  width: 100%;
+}
+
+.accessory-subring {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.accessory-subring .slot-header {
+  margin-bottom: 1px;
+}
+
+.accessory-subring .slot-title {
+  font-size: 9.5px;
+}
+
+/* ── Wings & Pet Combined Slot ── */
+.slot-wings-pet {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wings-subcard,
+.pet-subcard {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.slot-divider-h {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 3px 0;
+  width: 100%;
 }
 
 /* ── 2-Handed & Offhand specifics ── */
@@ -1289,6 +1346,13 @@ article.tabs section:target { display: block; }
   width: 100%;
 }
 
+.weap-dash,
+.weap-unit {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
 .slot-weap-row input {
   flex: 1;
   width: 50px !important;
@@ -1326,28 +1390,42 @@ article.tabs section:target { display: block; }
 .slot-wing-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   width: 100%;
-}
-
-.weap-dash,
-.weap-unit {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-dim);
+  box-sizing: border-box;
 }
 
 .slot-wing-row select {
+  flex: 1 1 0;
   font-size: 11px;
   padding: 2px 4px;
-  height: 22px;
+  height: 26px;
+  min-width: 0;
 }
 
-.slot-pet select {
+.slot-wing-row .plus-sep {
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-dim);
+}
+
+.slot-wing-row input {
+  flex: 0 0 52px;
+  width: 52px !important;
+  height: 26px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+.pet-subcard select {
   width: 100%;
   font-size: 11px;
-  padding: 2px 4px;
-  height: 22px;
+  padding: 2px 5px;
+  height: 26px;
+  box-sizing: border-box;
 }
 
 /* ── Set Summary Bar ── */
