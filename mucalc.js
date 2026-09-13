@@ -1452,6 +1452,60 @@ function refresh(e){
 	var lblRefPct = $('oLblRefPct');
 	if (lblRefPct) lblRefPct.textContent = refPct + '%';
 
+	// ── DPS & COMBAT PERFORMANCE ENGINE ──
+	var dpsAps = speed / 100; // e.g. 2800 speed = 28 attacks/sec
+
+	// Primary damage spread
+	var minD = 0, maxD = 0, excD = 0;
+	if (c === 'sm') {
+		minD = objDmg.wmindmg || 0;
+		maxD = objDmg.wmaxdmg || 0;
+		excD = objDmg.wexcdmg || 0;
+	} else if (c === 'dl') {
+		minD = objDmg.fbmindmg || objDmg.pmindmg || 0;
+		maxD = objDmg.fbmaxdmg || objDmg.pmaxdmg || 0;
+		excD = objDmg.fbexcdmg || objDmg.pexcdmg || 0;
+	} else {
+		minD = objDmg.pmindmg || 0;
+		maxD = objDmg.pmaxdmg || 0;
+		excD = objDmg.pexcdmg || 0;
+	}
+
+	// Critical Rate (Sorte): each luck piece gives 5%
+	var luckPieces = $('iSSorte') ? +$('iSSorte').value : 0;
+	var critRate = Math.min(1.0, luckPieces * 0.05);
+
+	// Excellent Rate (Exc 10%): count wp1, wp2, pendant
+	var wp1Exc = ($('iSCWpExc') && $('iSCWpExc').checked) || ($('iSCStaffExc') && $('iSCStaffExc').checked);
+	var wp2Exc = $('iSCWp2Exc') && $('iSCWp2Exc').checked;
+	var penExc = $('iSCPenExc') && $('iSCPenExc').checked;
+	var excCount = (wp1Exc ? 1 : 0) + (wp2Exc ? 1 : 0) + (penExc ? 1 : 0);
+	var excRate = Math.min(1.0, excCount * 0.10);
+
+	// Hit damage calculation:
+	// Normal: average of min~max spread
+	var normD = (minD + maxD) / 2;
+	// Critical: rolls the maximum damage on min~max spread
+	var critD = maxD;
+
+	var avgHitDmg = (excRate * excD) + ((1 - excRate) * (critRate * critD + (1 - critRate) * normD));
+	var totalDps = Math.round(avgHitDmg * dpsAps);
+
+	var elDpsTotal = $('oDpsTotal');
+	if (elDpsTotal) elDpsTotal.textContent = totalDps.toLocaleString('pt-BR');
+
+	var elDpsAps = $('oDpsAps');
+	if (elDpsAps) elDpsAps.textContent = dpsAps.toFixed(1) + '/s';
+
+	var elDpsAvgHit = $('oDpsAvgHit');
+	if (elDpsAvgHit) elDpsAvgHit.textContent = Math.round(avgHitDmg).toLocaleString('pt-BR');
+
+	var elDpsCritRate = $('oDpsCritRate');
+	if (elDpsCritRate) elDpsCritRate.textContent = Math.round(critRate * 100) + '%';
+
+	var elDpsExcRate = $('oDpsExcRate');
+	if (elDpsExcRate) elDpsExcRate.textContent = Math.round(excRate * 100) + '%';
+
 	if (c === 'me'){
 		$('oBuffRed').value   = red;
 		$('oBuffGreen').value = green;
@@ -1465,6 +1519,39 @@ function refresh(e){
 		saveBuilds();
 	}, 300);
 }
+
+function toggleMobileMenu() {
+	var navGroup = document.getElementById('headerNavGroup');
+	var btn = document.getElementById('btnHamburger');
+	if (!navGroup) return;
+	var isOpen = navGroup.classList.toggle('is-open');
+	if (btn) btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+function closeMobileMenu() {
+	var navGroup = document.getElementById('headerNavGroup');
+	if (navGroup && navGroup.classList.contains('is-open')) {
+		navGroup.classList.remove('is-open');
+	}
+}
+
+function syncTabNav() {
+	closeMobileMenu();
+	var nav = document.getElementById('tabNav');
+	if (!nav) return;
+	var currentHash = window.location.hash || '';
+	var links = nav.getElementsByTagName('a');
+	for (var i = 0; i < links.length; i++) {
+		var a = links[i];
+		if (currentHash && a.getAttribute('href') === currentHash) {
+			a.classList.add('active');
+		} else {
+			a.classList.remove('active');
+		}
+	}
+}
+
+window.addEventListener('hashchange', syncTabNav);
 
 document.addEventListener('DOMContentLoaded', function() {
 	initProviderSession();
